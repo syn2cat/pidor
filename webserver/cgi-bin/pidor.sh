@@ -17,7 +17,7 @@ then
   then
     echo "open" > /run/spacestatus
   fi
-# is now handled in cron Gunstick20140904 #  /usr/bin/curl --max-time 1 --silent --data key=96f7896f97asdf89u0a9s7d7fdasgsda88af --data-urlencode sensors='{"state":{"open":true,"lastchange":'"$nai"'}}' http://spaceapi.syn2cat.lu/sensor/set
+  echo "Performed action: $FORM_action"
 fi
 
 if [ "$FORM_action" = "close" ]
@@ -28,9 +28,9 @@ then
   then
     echo "closed" > /run/spacestatus
   fi
-# is now handled in cron Gunstick20140904 #  /usr/bin/curl --max-time 1 --silent --data key=96f7896f97asdf89u0a9s7d7fdasgsda88af --data-urlencode sensors='{"state":{"open":false,"lastchange":'"$nai"'}}' http://spaceapi.syn2cat.lu/sensor/set
   sudo /root/pidor/scripts/closetrigger.sh 
   logger -t $(basename $0) closetrigger ret=$?
+  echo "Performed action: $FORM_action"
 fi
 
 
