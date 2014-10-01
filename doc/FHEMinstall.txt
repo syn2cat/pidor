@@ -1,0 +1,16 @@
+http://www.fhemwiki.de/wiki/Raspberry_Pi
+
+sudo apt-get install perl libdevice-serialport-perl
+sudo apt-get install libio-socket-ssl-perl libwww-perl
+wget http://fhem.de/fhem-5.5.deb
+dpkg -i fhem-5.5.deb
+apt-get install -f
+
+go to interface:
+http://pidor:8083/fhem
+
+how to make a button:
+https://groups.google.com/forum/#!topic/fhem-users/1eQJ_Q4Evo4
+define MyBtn FS20 9999 99
+attr MyBtn dummy
+define MyNotify notify MyBtn "/local/bin/mypgm %"

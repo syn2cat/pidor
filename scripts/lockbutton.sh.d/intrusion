@@ -1,0 +1,8 @@
+#!/bin/bash
+if [ "$1" = "released" ] &&       # if switch was released (the door opened, or someone is playing with the switch)
+   [ "$(cat /run/spacestatus)" = "closed" ] &&    # the status was closed
+   [ $(stat -c "%Y" /run/spacestatus) -lt $(date --date "1 hour ago" +%s) ]    # since at least one hour
+then
+  echo "intrusion detected: space was closed since some time and locked, but now is still closed but unlocked" | wall
+  logger -t $(basename $0) "INTRUSION ALARM. door was opened while status is closed"
+fi

@@ -1,0 +1,6 @@
+#!/bin/bash
+if [ "$1" = "pushed" ] || [ "$1" = "released" ]
+then
+  logger -t $(basename $0) "writing $1 to doorlockbutton"
+  echo "$1" > /run/doorlockbutton
+fi
