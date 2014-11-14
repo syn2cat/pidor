@@ -2,10 +2,11 @@
 # called by upd_status and lockbutton, so that whatever
 # sequence is used, the lights go off
 if ( [ "$1" = "pushed" ] || [ "$1" = "closed" ] ) &&
-   [ "$(cat /run/spacestatus)" = "closed" ] &&
+#   [ "$(cat /run/spacestatus)" = "closed" ] &&
    [ "$(cat /run/doorlockbutton)" = "pushed" ] &&
-   ( [ "$(stat -c %Y /run/spacestatus)" -gt "$(date --date "5 minutes ago" +%s)" ] ||
-     [ "$(stat -c %Y /run/doorlockbutton)" -gt "$(date --date "5 minutes ago" +%s)" ] )
+#   ( [ "$(stat -c %Y /run/spacestatus)" -gt "$(date --date "5 minutes ago" +%s)" ] ||
+#     [ "$(stat -c %Y /run/doorlockbutton)" -gt "$(date --date "5 minutes ago" +%s)" ] )
+     [ "$(stat -c %Y /run/doorlockbutton)" -gt "$(date --date "5 minutes ago" +%s)" ] 
 then
   logger -t $(basename $0) "switching all lights off"
   for i in {1..16}
@@ -15,10 +16,11 @@ then
   logger -t $(basename $0) "all lights should be off now"
 fi
 if [ "$1" = "released" ] && # the door has been opened
-   [ "$(cat /run/spacestatus)" = "open" ] &&   # status is open
-   [ "$(stat -c %Y /run/spacestatus)" -gt "$(date --date "50 minutes ago" +%s)" ] &&  # since less than 5 minutes
-   ( [ "$(date +%H)" -gt 18 ] || [ "$(date +%H)" -lt 8 ] ) 
+#   [ "$(cat /run/spacestatus)" = "open" ] &&   # status is open
+#   [ "$(stat -c %Y /run/spacestatus)" -gt "$(date --date "50 minutes ago" +%s)" ] &&  # since less than 5 minutes
+   ( [ "$(date +%s)" -gt $(/root/pidor/scripts/sunset) ] || [ "$(date +%s)" -lt $(/root/pidor/scripts/sunrise) ] ) 
 then
+   #( [ "$(date +%H)" -gt 18 ] || [ "$(date +%H)" -lt 8 ] ) 
   logger -t $(basename $0) "switching some lights on"
   /usr/local/bin/433send 2 1A 1 1 #on
 fi

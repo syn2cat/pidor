@@ -1,0 +1,3 @@
+#!/bin/bash
+echo "49.5916 6.1407" | $(dirname "$0")/rscalc.awk |
+awk '/^Sunrise/{print $NF}'
