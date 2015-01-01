@@ -13,8 +13,11 @@ do
   then
     for plugin in "$0".d/*
     do
-      "$plugin" pushed
-      logger -t $(basename $0) "called '$plugin pushed' with ret=$?"
+      if [ -x "$plugin" ]
+      then
+        "$plugin" pushed
+        logger -t $(basename $0) "called '$plugin pushed' with ret=$?"
+      fi
     done
     state="pushed"
   else
@@ -22,8 +25,11 @@ do
     then
       for plugin in "$0".d/*
       do
-        "$plugin" released
-        logger -t $(basename $0) "called '$plugin released' with ret=$?"
+        if [ -x "$plugin" ]
+        then
+          "$plugin" released
+          logger -t $(basename $0) "called '$plugin released' with ret=$?"
+        fi
       done
       state="released"
     fi

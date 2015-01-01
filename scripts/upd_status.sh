@@ -1,6 +1,7 @@
 #!/bin/bash
 IGNORE_DOORLOCKBUTTON="no"
 LockDir="/run/$(basename "$0").run"
+spaceapikey="$(cat "$(dirname $0)"/spaceapikey.txt)"
 P() {
   while ! mkdir "$LockDir" 2>/dev/null
   do 
@@ -34,18 +35,22 @@ then
   chown www-data /run/spacestatus
 fi
 
-status=$(cat /run/spacestatus)
-doorlockbutton=$(cat /run/doorlockbutton)
+status="$(cat /run/spacestatus)"
+oldstatus="$(cat /root/var/spacestatus)"
+doorlockbutton="$(cat /run/doorlockbutton)"
 nai=$(stat -c "%Y" /run/spacestatus)    # get mtime as status change time
 if [ "$status" = "open" ]
 then
-  /usr/bin/curl --max-time 1 --silent --data key=96f7896f97asdf89u0a9s7d7fdasgsda88af --data-urlencode sensors='{"state":{"open":true,"lastchange":'"$nai"'}}' http://spaceapi.syn2cat.lu/sensor/set
+  /usr/bin/curl --max-time 1 --silent --data key="$spaceapikey" --data-urlencode sensors='{"state":{"open":true,"lastchange":'"$nai"'}}' http://spaceapi.syn2cat.lu/sensor/set
   #logger -t $(basename $0) "sending status $status to spacapi ret=$?"
 fi
 for plugin in $(ls "$0".d)
 do
-  "$0".d/"$plugin" "$status"
-#  logger -t $(basename $0) "called $plugin '$status'. ret=$?"
+  if [ -x "$0".d/"$plugin" ]
+  then
+    "$0".d/"$plugin" "$status" "$oldstatus"
+    logger -t $(basename $0) "called $plugin '$status' '$oldstatus'. ret=$?"
+  fi
 done
 
 if [ "$status" = "closed" ] && ( 
@@ -54,7 +59,7 @@ then
   # problem: if closing state but not actually shuting door for a longer time, the status in spaceapi
   # will be the time of closing but not that of actually shutting the door
   # but the status will only be updated once the door is shut
-  /usr/bin/curl --max-time 1 --silent --data key=96f7896f97asdf89u0a9s7d7fdasgsda88af --data-urlencode sensors='{"state":{"open":false,"lastchange":'"$nai"'}}' http://spaceapi.syn2cat.lu/sensor/set
+  /usr/bin/curl --max-time 1 --silent --data key="$spaceapikey" --data-urlencode sensors='{"state":{"open":false,"lastchange":'"$nai"'}}' http://spaceapi.syn2cat.lu/sensor/set
   #logger -t $(basename $0) "sending status $status to spacapi ret=$?"
 fi
 
@@ -68,5 +73,5 @@ if [ "$status" = "closed" ]
 then
   presency=0
 fi
-/usr/bin/curl --max-time 1 --silent --data key=96f7896f97asdf89u0a9s7d7fdasgsda88af --data-urlencode sensors='{"sensors":{"people_now_present":[{"value":'"$presency"'}]}}' http://spaceapi.syn2cat.lu/sensor/set
+/usr/bin/curl --max-time 1 --silent --data key="$spaceapikey" --data-urlencode sensors='{"sensors":{"people_now_present":[{"value":'"$presency"'}]}}' http://spaceapi.syn2cat.lu/sensor/set
 V

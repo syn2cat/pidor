@@ -1,6 +1,7 @@
 #!/bin/bash
 # changes level2 state by the state of the main door
 # i.e. people have to leave it open to keep status open
+sleep 1   # silly way to debounce 
 if [ "$1" = "pushed" ] && 
    [ "$(cat /run/spacestatus)" = "open" ]   
 then

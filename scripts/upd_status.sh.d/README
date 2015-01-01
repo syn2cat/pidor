@@ -1,0 +1,7 @@
+put script here which are called once per minute
+parameters to script are:
+scriptname current_status previous_status
+where current_status and previous_status are either "open" or "closed"
+
+the script must have the executable bit. 
+parameter files can be here but must not have the execute bit
