@@ -2,9 +2,20 @@
 <?php
 
 /*
- * Tezza
+ * Tezza (@Kaweechelchen | tezza@syn2cat.lu)
  * https://github.com/J7mbo/twitter-api-php
  * */
+
+// Set the correct timezone
+date_default_timezone_set( 'Europe/Luxembourg' );
+
+// Set a statusTag you want to append to all the messages
+$statusTag = '#statusUpdate';
+
+// Set the messages to tweet when the status of the hackspace changes
+// %s is going to be replaced by the current time to avoid duplicate tweets on Twitter
+$messageOpen    = "It's %s and we are open \o/, come in and create something awesome =) $statusTag";
+$messageClosed  = "We just closed our doors at %s. See you very soon... $statusTag";
 
 require_once('TwitterAPIExchange.php');
 
@@ -23,35 +34,37 @@ require_once('twittertokens.php');   /* put the tokens inside separate file whic
 $url = 'https://api.twitter.com/1.1/statuses/update.json';
 $requestMethod = 'POST';
 
-file_put_contents( '/var/test.txt', $argv );
-/*
-if ( $spaceAPI ) {
-  $level2status = $spaceAPI['state']['open'];
+// Get the current and previous status from the parameters handed over to the script
+$currentStatus  = $argv[1];
+$previousStatus = $argv[2];
 
-  var_dump( $level2status );
+// Chack if the status has changed
+if ( $currentStatus != $previousStatus ) {
 
-  if ( $level2status != file_get_contents('/var/cronjobs/lvl2_tweet/lastKnownState.txt') ) {
-    if ( $level2status ) {
-      $status = 'It\'s ' . date( 'H:i', $spaceAPI['state']['lastchange'] ) . ' and we are open \o/, come in and create something awesome =) #statusUpdate';
-       file_put_contents( '/var/cronjobs/lvl2_tweet/lastKnownState.txt', '1' );
-    } else {
-      $status = 'We just closed our doors at ' . date( 'H:i', $spaceAPI['state']['lastchange'] ) . '. See you very soon... #statusUpdate';
-       file_put_contents( '/var/cronjobs/lvl2_tweet/lastKnownState.txt', '0');
-    }
+  // based on the new status, define the message to tweet
+  switch ( $currentStatus ) {
 
-    var_dump( $status );
+    case 'open':
+      $status = sprintf( $messageOpen, date( 'H:i' ) );
+      break;
 
-    // POST fields required by the URL above. See relevant docs as above
-    $postfields = array(
-          'status' => $status
-        );
-
-    // Perform a POST request and echo the response
-    $twitter = new TwitterAPIExchange($settings);
-    echo $twitter->buildOauth($url, $requestMethod)
-                 ->setPostfields($postfields)
-           ->performRequest();
+    case 'closed':
+      $status = sprintf( $messageClosed, date( 'H:i' ) );
+      break;
 
   }
+
+  // POST fields required by the URL above. See relevant docs as above
+  $postfields = array(
+    'status' => $status
+  );
+
+  // Perform a POST request and echo the response
+  $twitter = new TwitterAPIExchange($settings);
+
+  // build the tweet and send it out
+  $twitter
+    ->buildOauth($url, $requestMethod)
+    ->setPostfields($postfields)
+    ->performRequest();
 }
-*/
