@@ -72,4 +72,5 @@ po::powerokwait:/etc/init.d/powerfail stop
 T0:23:respawn:/sbin/getty -L ttyAMA0 115200 vt100
 
 # pidor
-P0:2345:respawn:/root/lockbutton.sh
+P0:2345:respawn:/root/pidor/scripts/lockbutton.sh
+#P1:2345:respawn:/root/pidor/scripts/phone_notification.sh

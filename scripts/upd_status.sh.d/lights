@@ -15,6 +15,10 @@ then
   done
   logger -t $(basename $0) "all lights should be off now"
 fi
+if [ "$1" = "released" ]
+then   # switch status lights on, in any case
+  /usr/local/bin/433send 2 1A 2 1 #on
+fi
 if [ "$1" = "released" ] && # the door has been opened
 #   [ "$(cat /run/spacestatus)" = "open" ] &&   # status is open
 #   [ "$(stat -c %Y /run/spacestatus)" -gt "$(date --date "50 minutes ago" +%s)" ] &&  # since less than 5 minutes
