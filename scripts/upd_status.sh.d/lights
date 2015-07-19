@@ -11,13 +11,16 @@ then
   logger -t $(basename $0) "switching all lights off"
   for i in {1..16}
   do
-    /usr/local/bin/433send 2 1A $i 0 #off
+    for j in {1..16}
+    do
+      /usr/local/bin/433send 2 $j $i 0 #off
+    done
   done
   logger -t $(basename $0) "all lights should be off now"
 fi
 if [ "$1" = "released" ]
 then   # switch status lights on, in any case
-  /usr/local/bin/433send 2 1A 2 1 #on
+  /usr/local/bin/433send 2 2A 1 1 #on
 fi
 if [ "$1" = "released" ] && # the door has been opened
 #   [ "$(cat /run/spacestatus)" = "open" ] &&   # status is open
@@ -30,7 +33,7 @@ then
 fi
 
 #                       type (2=10bit)
-#                       | house 1-16 (always 1 in our case)
+#                       | house 1-16 (the dial thingie)
 #                       | |group A-P (the dial thingie)
 #                       | || unit (1-16) (the button, usually 1-4)
 #                       | || | on/off

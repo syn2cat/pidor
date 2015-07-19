@@ -2,7 +2,7 @@
 <?php
 
 /*
- * Tezza (@Kaweechelchen | tezza@syn2cat.lu)
+ * Tezza (@Kaweechelchen | tezza@syn2cat.lu)
  * https://github.com/J7mbo/twitter-api-php
  * */
 
@@ -14,8 +14,8 @@ $statusTag = '#statusUpdate';
 
 // Set the messages to tweet when the status of the hackspace changes
 // %s is going to be replaced by the current time to avoid duplicate tweets on Twitter
-$messageOpen    = "It's %s and we are open \o/, come in and create something awesome =) $statusTag";
-$messageClosed  = "We just closed our doors at %s. See you very soon... $statusTag";
+$messageOpen    = "It's %s and we are open \o/ \ncome in and create something awesome =) \nhttps://Level2.lu/openingTimes";
+$messageClosed  = "We just closed our doors at %s \nSee you very soon... \nhttps://Level2.lu/openingTimes";
 
 require_once('TwitterAPIExchange.php');
 
