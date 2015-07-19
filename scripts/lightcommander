@@ -1,0 +1,42 @@
+#!/bin/bash
+if [ "$1" = "" ]
+then
+  echo "usage: $0 {main|chill|status|labsocket|alarm} {on|off}"
+  exit 1
+fi
+function dolight() {
+  if [ "$2" = "on" ]
+  then
+    setvalue=1
+  else
+    setvalue=0
+  fi
+  case "$1" in
+    all) dolight "main" $2
+         dolight "status" $2
+         dolight "labsocket" $2
+         dolight "alarm" $2
+         ;; 
+    main)      /usr/local/bin/433send 2 1A 1 "$setvalue"
+         ;; 
+    chill)     /usr/local/bin/433send 2 1A 2 "$setvalue"
+         ;; 
+    status)    /usr/local/bin/433send 2 2A 1 "$setvalue"
+         ;; 
+    labsocket) /usr/local/bin/433send 2 15A 6 "$setvalue"
+         ;; 
+    alarm)     /usr/local/bin/433send 2 15A 1 "$setvalue"
+         ;; 
+  esac
+  #                       type (2=10bit)
+  #                       | house 1-16 (the dial thingie)
+  #                       | |group A-P (the dial thingie)
+  #                       | || unit (1-16) (the button, usually 1-4)
+  #                       | || | on/off
+  #                       | || | |
+  #/usr/local/bin/433send 2 1A 1 1 #on
+  #/usr/local/bin/433send 2 1A 1 0 #off
+}
+
+logger -t $(basename $0) "$$ $1 $2"
+dolight "$1" "$2"

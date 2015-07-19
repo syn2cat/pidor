@@ -23,10 +23,12 @@ do
     logger -t $(basename $0) "phone status change detected"
     if [ "$new_status" -eq 0 ]; then
 	logger -t $(basename $0) "phone ring light on"
-        /usr/local/bin/433send 2 15 1 1
+        $(dirname "$0")/lightcommander alarm on
+        #/usr/local/bin/433send 2 15 1 1
     else
 	logger -t $(basename $0) "phone ring light off"
-        /usr/local/bin/433send 2 15 1 0
+        $(dirname "$0")/lightcommander alarm off
+        #/usr/local/bin/433send 2 15 1 0
     fi
     echo $new_status > ${run_file}
   fi

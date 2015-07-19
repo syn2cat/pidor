@@ -13,13 +13,15 @@ do
   then
     logger -t $(basename $0) "phone status change detected"
     logger -t $(basename $0) "phone ring light on"
-    /usr/local/bin/433send 2 15 1 1 >&2
+    $(dirname "$0")/lightcommander alarm on >&2
+    #/usr/local/bin/433send 2 15 1 1 >&2
   fi
   
   if [ "$cmd" = "flashoff" ]
   then
     logger -t $(basename $0) "phone status change detected"
     logger -t $(basename $0) "phone ring light off"
-    /usr/local/bin/433send 2 15 1 0 >&2
+    $(dirname "$0")/lightcommander alarm off >&2
+    #/usr/local/bin/433send 2 15 1 0 >&2
   fi
 done
