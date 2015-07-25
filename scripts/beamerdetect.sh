@@ -4,7 +4,7 @@ then
   (
   projip=$(arp -an|awk -F'[()]' '/00:50:41:79:d1:34/{print $2}')
   signalsource="$(wget -qO - 'http://'"$projip"'/tgi/return.tgi?query=info' |awk -F'[<>]' '/<info>/{print substr($3,33,2)}')"
-  if [ "$signalsource" = "00" ] || [ "$signalsource" = "15" ]
+  if [ "$signalsource" = "00" ] || [ "$signalsource" = "15" ] || [ "$signalsource" = "" ]
   then
     ssh pi@doorbuzz 'doorbuzz/projectionscreen.sh up'
     echo "wget http://$projip/tgi/return.tgi?command=2a3102fd0660"
