@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Thierry Degeling [@FAQ]">
+
+    <title>Control the lights of Level2</title>
+    <link href="bootstrap.min.css" rel="stylesheet">
+
+    <style type="text/css">
+
+      body {
+        padding-top: 15px;
+      }
+      .jumbotron {
+        padding: 0px;
+      }
+
+      .h1, .h2, .h3, h1, h2, h3 {
+        margin-top: 10px;
+      }
+
+    </style>
+
+  </head>
+
+  <body>
+
+    <div class="container">
+
+      <div class="jumbotron hidden-xs">
+        <div class="container">
+          <h1>Hello, human!</h1>
+          <p>Manage the Level2 lights here</p>
+        </div>
+      </div>
+
+      <div class="row marketing">
+        <div class="col-md-6">
+          <div class=" well">
+            <h2>Chill</h2>
+            <p>This enables/disables all the lights of the Chill area</p>
+            <p><a class="btn btn-success btn-block" data-area="chill" data-status="on" >On</a></p>
+            <p><a class="btn btn-danger btn-block"  data-area="chill" data-status="off" >Off</a></p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class=" well">
+            <h2>Main</h2>
+            <p>This enables/disables all the lights of Level2</p>
+            <p><a class="btn btn-success btn-block" data-area="main" data-status="on" >On</a></p>
+            <p><a class="btn btn-danger btn-block"  data-area="main" data-status="off" >Off</a></p>
+          </div>
+        </div>
+
+    </div> <!-- /container -->
+
+    <script src="jquery.min.js"></script>
+
+    <script type="text/javascript">
+
+      $( ".btn" ).on( "click", function() {
+
+        $.get( "http://lights.level2.lu/api.php", { area: $( this ).data( 'area' ), status: $( this ).data( 'status' ) } );
+
+      });
+
+    </script>
+
+  </body>
+</html>
+

@@ -1,0 +1,54 @@
+#!/bin/bash
+
+#parse-query 
+# Copyright 2007  Chris F.A. Johnson
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# rebuilt by gunstick 2012 (http://cfajohnson.com/shell/articles/parse-query/ is non working version)
+
+parse_query() #@ USAGE: parse_query var ...
+{
+    local var val
+    local IFS='&'
+    vars="&$*&"
+    [ "$REQUEST_METHOD" = "POST" ] && read QUERY_STRING
+    set -f
+    for item in $QUERY_STRING
+    do
+      var=${item%%=*}
+      val=${item#*=}
+      val=${val//+/ }
+#      case $vars in
+#          *"&$var&"* )
+              case $val in
+                  *%[0-9a-fA-F][0-9a-fA-F]*)
+                       val=$( printf "%b" "${val//\%/\\x}." )
+                       val=${val%.}
+                       #printf -v val "%b" "${val//\%/\\x}"
+                       ;;
+              esac
+              val="$(echo "$val"|tr -d '\r')"
+              eval "FORM_$var=\$val"
+              # create var for use in form fields
+              val="$(echo "$val"|sed 's/&/\&#38/g;s/"/\&#34;/g;s/</\&#60;/g')"
+              eval "FORM_f_$var=\$val"
+#              ;;
+#      esac
+    done
+    set +f
+}
+
+
+

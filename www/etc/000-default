@@ -1,0 +1,51 @@
+<VirtualHost *:80>
+	ServerAdmin info@hackerspace.lu
+
+	DocumentRoot /var/www
+	<Directory />
+		Options FollowSymLinks
+		AllowOverride None
+	</Directory>
+	<Directory /var/www/>
+		Options Indexes FollowSymLinks MultiViews
+		AllowOverride None
+		Order allow,deny
+		allow from all
+
+		AuthName "Pi d'Or"
+		AuthType Basic
+		AuthBasicProvider ldap
+		AuthzLDAPAuthoritative on
+		AuthLDAPURL "ldap://127.0.0.1/ou=People,dc=hackerspace,dc=lu?uid"
+		AuthLDAPGroupAttribute memberUid
+		AuthLDAPGroupAttributeIsDN off
+		Require ldap-group cn=syn2cat_full_member,ou=Group,dc=hackerspace,dc=lu
+	</Directory>
+
+	ScriptAlias /cgi-bin/ /usr/lib/cgi-bin/
+	<Directory "/usr/lib/cgi-bin">
+		AllowOverride None
+		Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
+		Order allow,deny
+		Allow from all
+                AuthName "Pi d'Or"
+                AuthType Basic
+                AuthBasicProvider ldap
+                AuthzLDAPAuthoritative on
+                AuthLDAPURL "ldap://127.0.0.1/ou=People,dc=hackerspace,dc=lu?uid"
+                AuthLDAPGroupAttribute memberUid
+                AuthLDAPGroupAttributeIsDN off
+                Require ldap-group cn=syn2cat_full_member,ou=Group,dc=hackerspace,dc=lu
+
+	</Directory>
+
+
+
+	ErrorLog ${APACHE_LOG_DIR}/error.log
+
+	# Possible values include: debug, info, notice, warn, error, crit,
+	# alert, emerg.
+	LogLevel warn
+
+	CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>

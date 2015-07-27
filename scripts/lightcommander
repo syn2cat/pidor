@@ -17,15 +17,15 @@ function dolight() {
          dolight "labsocket" $2
          dolight "alarm" $2
          ;; 
-    main)      /usr/local/bin/433send 2 1A 1 "$setvalue"
+    main)      sudo /root/pidor/rcswitch-pi/send 2 1A 1 "$setvalue"
          ;; 
-    chill)     /usr/local/bin/433send 2 1A 2 "$setvalue"
+    chill)     sudo /root/pidor/rcswitch-pi/send 2 1A 2 "$setvalue"
          ;; 
-    status)    /usr/local/bin/433send 2 2A 1 "$setvalue"
+    status)    sudo /root/pidor/rcswitch-pi/send 2 2A 1 "$setvalue"
          ;; 
-    labsocket) /usr/local/bin/433send 2 15A 6 "$setvalue"
+    labsocket) sudo /root/pidor/rcswitch-pi/send 2 15A 6 "$setvalue"
          ;; 
-    alarm)     /usr/local/bin/433send 2 15A 1 "$setvalue"
+    alarm)     sudo /root/pidor/rcswitch-pi/send 2 15A 1 "$setvalue"
          ;; 
   esac
   #                       type (2=10bit)
