@@ -2,16 +2,23 @@
 if [ "$1" = "off" ]
 then
   (
+  echo "called with parameter $1"
   projip=$(arp -an|awk -F'[()]' '/00:50:41:79:d1:34/{print $2}')
+  if [ "$projip" = "" ]
+  then
+    echo "no projector IP found"
+    arp -a
+    exit
+  fi
   signalsource="$(wget -qO - 'http://'"$projip"'/tgi/return.tgi?query=info' |awk -F'[<>]' '/<info>/{print substr($3,33,2)}')"
   if [ "$signalsource" = "00" ] || [ "$signalsource" = "15" ] || [ "$signalsource" = "" ]
   then
     ssh pi@doorbuzz 'doorbuzz/projectionscreen.sh up'
-    echo "wget http://$projip/tgi/return.tgi?command=2a3102fd0660"
+    echo "wget http://$projip/tgi/return.tgi?command=2a3102fd0660 #projector off"
     wget -qO - 'http://'"$projip"'/tgi/return.tgi?command=2a3102fd0660' 2>&1 
     echo $? 
   else
-    echo "not disabling projection because source is at $signalsource" 
+    echo "not disabling projector because source is at $signalsource" 
   fi
   ) | logger -t "$(basename $0) $$"
   exit
