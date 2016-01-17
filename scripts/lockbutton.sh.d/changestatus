@@ -2,6 +2,10 @@
 # changes level2 state by the state of the main door
 # i.e. people have to leave it open to keep status open
 sleep 1   # silly way to debounce 
+if [ ! -f /run/spacestatus ]  # needed to init after boot
+then
+  cp -p /root/var/spacestatus /run/spacestatus
+fi
 if [ "$1" = "pushed" ] && 
    [ "$(cat /run/spacestatus)" = "open" ]   
 then

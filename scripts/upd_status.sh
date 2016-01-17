@@ -1,4 +1,5 @@
 #!/bin/bash
+sleep 5
 IGNORE_DOORLOCKBUTTON="no"
 LockDir="/run/$(basename "$0").run"
 spaceapikey="$(cat "$(dirname $0)"/spaceapikey.txt)"

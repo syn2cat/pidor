@@ -1,4 +1,16 @@
 #!/bin/bash
+PEOPLECOUNTERIP=$(cat $(dirname "$0")"/peoplecounterip.txt")
+# we now have a people counter
+p="$(
+ wget -qO - "http://$PEOPLECOUNTERIP/output.cgi?t=$(date +%s)" |
+ sed 's/.*Occupancy://'|
+ awk '{print $2}')"
+if [ "$p" != "" ]
+then
+  echo "$p" > /run/presency
+else
+  logger $0 cannot access people counter. fallback to dhcp value guessing
+fi
 n=0
 for i in $(ls /run/dhcp-leases/)
 do
@@ -18,4 +30,7 @@ do
     fi
   fi
 done
-echo "$n" > /run/presency
+if [ "$p" = "" ]  # write DHCP count if people counter offline
+then
+  echo "$n" > /run/presency
+fi

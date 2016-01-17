@@ -1,0 +1,15 @@
+#!/bin/bash
+# this script only makes sense if there is a good people counter installed
+if [ "$1" = "closed" ] && [ "$2" = "open" ]
+then
+  p="$(cat /run/presency)"
+  if [ "$p" != "0" ]
+  then
+    logger $0 There are $p people, closed door from inside waiting 1 min. 
+    sleep 60
+    p="$(cat /run/presency)"
+    logger $0 There are $p people, closed door from inside after 1 min. 
+  else
+    logger $0 There are $p people, correctly closed door from outside. 
+  fi &
+fi
