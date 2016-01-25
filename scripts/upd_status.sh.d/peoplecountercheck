@@ -5,11 +5,16 @@ then
   p="$(cat /run/presency)"
   if [ "$p" != "0" ]
   then
-    logger $0 There are $p people, closed door from inside waiting 1 min. 
+    logger $(basename $0) There are $p people, closed door from inside. Waiting 1 min. 
     sleep 60
     p="$(cat /run/presency)"
-    logger $0 There are $p people, closed door from inside after 1 min. 
+    if [ "$p" = "0" ]
+    then
+      logger $(basename $0) There are $p people, after 1 min wait. All OK.
+    else
+      logger $(basename $0) There are $p people, after 1 min. Maybe ALARM
+    fi
   else
-    logger $0 There are $p people, correctly closed door from outside. 
+    logger $(basename $0) There are $p people, correctly closed door from outside. All OK.
   fi &
 fi
