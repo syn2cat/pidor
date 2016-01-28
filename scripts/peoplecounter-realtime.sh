@@ -16,18 +16,22 @@ do
     echo "$p" > /run/peoplecounter
     if [ "$p" != "$oldp" ]
     then
-      logger $0 changed from $oldp to $p people
+      logger $(basename $0) changed from $oldp to $p people
+      if [ "$p" -gt "$oldp" ]
+      then
+        echo "$p" > /run/peoplecountermax
+      fi
     fi
     if [ "$state" = "offline" ]
     then
       state="online"
-      logger $0 people counter online
+      logger $(basename $0) people counter online
     fi
   else
     if [ "$state" = "online" ]
     then
       state="offline"
-      logger $0 people counter offline
+      logger $(basename $0) people counter offline
     fi
   fi
   sleep 10
