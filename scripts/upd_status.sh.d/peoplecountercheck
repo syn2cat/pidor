@@ -2,12 +2,12 @@
 # this script only makes sense if there is a good people counter installed
 if [ "$1" = "closed" ] && [ "$2" = "open" ]
 then
-  p="$(cat /run/presency)"
+  p="$(tail -1 /run/peoplecounter)"
   if [ "$p" != "0" ]
   then
     logger $(basename $0) There are $p people, closed door from inside. Waiting 1 min. 
     sleep 60
-    p="$(cat /run/presency)"
+    p="$(tail -1 /run/peoplecounter)"
     if [ "$p" = "0" ]
     then
       logger $(basename $0) There are $p people, after 1 min wait. All OK.

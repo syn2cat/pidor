@@ -9,7 +9,7 @@ else
   DEV=""
 fi
 STATSFILE="/run/peoplecounter$DEV"
-SAMPLES=12 # how many records to keep in file
+SAMPLES=20 # how many records to keep in file
 INTERVAL=10 # how long to wait between polls
 MAXFILE="/run/peoplecountermax$DEV"
 PRESENCY="/run/presency$DEV"   # value shown on website

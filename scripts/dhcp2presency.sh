@@ -7,7 +7,8 @@ p="$(
  awk '{print $2}')"
 if [ "$p" != "" ]
 then
-  echo "$p" > /run/presency
+  :
+  #  echo "$p" > /run/presency # handled now in realtime code
 else
   logger $0 cannot access people counter. fallback to dhcp value guessing
 fi
