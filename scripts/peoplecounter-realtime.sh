@@ -71,7 +71,13 @@ do
         echo "$p" > "$MAXFILE"
       fi
     fi
-    getaveragepeople > "$PRESENCY"
+    oldaverage="$(cat "$PRESENCY")"
+    newaverage=$(getaveragepeople)
+    if [ "$oldaverage" -ne "$newaverage" ]
+    then
+      logger $(basename $0) updated precency average from $oldaverage to $newaverage people
+      echo "$newaverage" > "$PRESENCY"
+    fi
     if [ "$state" = "offline" ]
     then
       state="online"
