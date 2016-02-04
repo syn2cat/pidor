@@ -66,14 +66,18 @@ do
     if [ "$p" != "$oldp" ]
     then
       logger $(basename $0) changed from $oldp to $p people
-      if [ "$p" -gt "$oldp" ]
+      curmax=$(getmaxpeople)
+      oldmax=$(cat "$MAXFILE")
+      if [ "$curmax" -gt "$oldmax" ]
       then
-        echo "$p" > "$MAXFILE"
+        logger $(basename $0) setting max to $curmax because bigger than $oldmax
+        echo "$curmax" > "$MAXFILE"
       fi
     fi
     oldaverage="$(cat "$PRESENCY")"
     newaverage=$(getaveragepeople)
-    if [ "$oldaverage" -ne "$newaverage" ]
+    #logger $(basename $0) averages o=$oldaverage n=$newaverage
+    if [ "$oldaverage" != "$newaverage" ]
     then
       logger $(basename $0) updated precency average from $oldaverage to $newaverage people
       echo "$newaverage" > "$PRESENCY"

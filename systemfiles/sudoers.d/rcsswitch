@@ -1,0 +1,1 @@
+www-data ALL=(root) NOPASSWD: /root/pidor/rcswitch-pi/send 

@@ -1,7 +1,7 @@
 #!/bin/bash
 if [ "$1" = "" ]
 then
-  echo "usage: $0 {main|chill|status|labsocket|alarm} {on|off}"
+  echo "usage: $0 {main|chill|status|labsocket|alarm|screen|projector} {on|off}"
   exit 1
 fi
 function dolight() {
@@ -27,6 +27,10 @@ function dolight() {
          ;; 
     alarm)     sudo /root/pidor/rcswitch-pi/send 2 15A 1 "$setvalue"
          ;; 
+    screen)    sudo /root/pidor/scripts/beamercontrol.sh screen "$2"
+         ;;
+    projector) sudo /root/pidor/scripts/beamercontrol.sh beamer "$2"
+         ;;
   esac
   #                       type (2=10bit)
   #                       | house 1-16 (the dial thingie)

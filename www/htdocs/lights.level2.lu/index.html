@@ -19,7 +19,10 @@
       }
 
       .h1, .h2, .h3, h1, h2, h3 {
-        margin-top: 10px;
+        margin-top: 0;
+      }
+      .well {
+        padding: 10px;
       }
 
     </style>
@@ -37,25 +40,45 @@
         </div>
       </div>
 
-      <div class="row marketing">
+      <div class="row">
         <div class="col-md-6">
           <div class=" well">
-            <h2>Chill</h2>
-            <p>This enables/disables all the lights of the Chill area</p>
-            <p><a class="btn btn-success btn-block" data-area="chill" data-status="on" >On</a></p>
-            <p><a class="btn btn-danger btn-block"  data-area="chill" data-status="off" >Off</a></p>
+            <h1>Chill Switch</h1>
+            <p><a class="btn btn-success btn-lg btn-block" data-area="chill" data-status="on" >On</a></p>
+            <p><a class="btn btn-danger btn-lg btn-block"  data-area="chill" data-status="off" >Off</a></p>
           </div>
         </div>
         <div class="col-md-6">
           <div class=" well">
-            <h2>Main</h2>
-            <p>This enables/disables all the lights of Level2</p>
-            <p><a class="btn btn-success btn-block" data-area="main" data-status="on" >On</a></p>
-            <p><a class="btn btn-danger btn-block"  data-area="main" data-status="off" >Off</a></p>
+            <h1>Main Switch</h1>
+            <p><a class="btn btn-success btn-lg btn-block" data-area="main" data-status="on" >On</a></p>
+            <p><a class="btn btn-danger btn-lg btn-block"  data-area="main" data-status="off" >Off</a></p>
           </div>
         </div>
+      </div>
+
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class=" well">
+            <h1>Projection screen</h1>
+            <p><a class="btn btn-danger btn-lg btn-block" data-area="screen" data-status="off" >^^^ Roll Up ^^^</a></p>
+            <p><a class="btn btn-success btn-lg btn-block"  data-area="screen" data-status="on" >vvv Roll Down vvv</a></p>
+            Note: switching the projector on will roll the screen down automatically
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class=" well">
+            <h1>Projector</h1>
+            <p><a class="btn btn-success btn-lg btn-block" data-area="projector" data-status="on" >On</a></p>
+            <p><a class="btn btn-danger btn-lg btn-block"  data-area="projector" data-status="off" >Off</a></p>
+          </div>
+        </div>
+      </div>
 
     </div> <!-- /container -->
+
+      <div class="jumbotron hidden-xs">
 
     <script src="jquery.min.js"></script>
 
