@@ -11,7 +11,7 @@ fi
 STATSFILE="/run/peoplecounter$DEV"
 SAMPLES=20 # how many records to keep in file
 INTERVAL=10 # how long to wait between polls
-MAXFILE="/run/peoplecountermax$DEV"
+MAXFILE="/root/var/peoplecountermax$DEV"
 PRESENCY="/run/presency$DEV"   # value shown on website
 # /run/peoplecounter lists all recent reads, newest at end
 # let's have some management functions instead of a database
@@ -68,9 +68,9 @@ do
       logger $(basename $0) changed from $oldp to $p people
       curmax=$(getmaxpeople)
       oldmax=$(cat "$MAXFILE")
-      if [ "$curmax" -gt "$oldmax" ]
+      if [ "$curmax" -gt "${oldmax:-0}" ]
       then
-        logger $(basename $0) setting max to $curmax because bigger than $oldmax
+        logger $(basename $0) setting max to $curmax because bigger than ${oldmax:-}
         echo "$curmax" > "$MAXFILE"
       fi
     fi

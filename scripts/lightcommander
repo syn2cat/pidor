@@ -1,7 +1,8 @@
 #!/bin/bash
 if [ "$1" = "" ]
 then
-  echo "usage: $0 {main|chill|status|labsocket|alarm|screen|projector} {on|off}"
+  echo "usage: $0 {main|chill|status|labsocket|alarm|screen} {on|off}"
+  echo "usage: $0 {projector} {on|hdmi1|hdmi2|dvi|vga1|off}"
   exit 1
 fi
 function dolight() {
