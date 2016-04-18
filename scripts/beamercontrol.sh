@@ -26,8 +26,11 @@ function hdmi1() {
   wget -qO/dev/null http://$projip/tgi/return.tgi?command=2a3109f6071475 #switch to hdmi1
 }
 function hdmi2() {
+  receiveron
   echo "Switching to hdmi2"
   wget -qO/dev/null http://$projip/tgi/return.tgi?command=2a3109f6071576 #switch to hdmi2
+  sleep 4
+  receiverhdmi
 }
 function vga1() {
   echo "Switching to vga1"
@@ -36,6 +39,36 @@ function vga1() {
 function vga2() {
   echo "Switching to vga2"
   wget -qO/dev/null http://$projip/tgi/return.tgi?command=2a3109f6070263 #switch to vga2
+}
+function receiveron() {
+  echo "switching receiver on"
+  ssh pi@doorbuzz '/usr/bin/irsend SEND_ONCE pioneer "KEY_POWER"'
+}
+function receiveroff() {
+  echo "switching receiver off"
+  ssh pi@doorbuzz '/usr/bin/irsend SEND_ONCE pioneer "KEY_POWER2"'
+}
+
+function receiverhdmi() {
+  echo "Switching receiver to hdmi"
+  ssh pi@doorbuzz '/usr/bin/irsend SEND_ONCE pioneer "KEY_DVD"'
+}
+function receiverjack1() {
+  echo "Switching receiver to jack1"
+  ssh pi@doorbuzz '/usr/bin/irsend SEND_ONCE pioneer "KEY_VCR"'
+}
+function receiverjack2() {
+  echo "Switching receiver to jack2"
+  ssh pi@doorbuzz '/usr/bin/irsend SEND_ONCE pioneer "KEY_VCR2"'
+
+}
+function receiveroptical() {
+  echo "Switching receiver to optical"
+  ssh pi@doorbuzz '/usr/bin/irsend SEND_ONCE pioneer "KEY_TAPE"'
+}
+function receivertuner() {
+  echo "Switching receiver to tuner"
+  ssh pi@doorbuzz '/usr/bin/irsend SEND_ONCE pioneer "KEY_TUNER"'
 }
 function usage() {
   echo "Usage: $0 (beamer|screen) (on|dvi|hdmi1|hdmi2|vga|off|down|up)"
@@ -69,10 +102,29 @@ case $1 in
       *) usage
     esac
     ;;
+  receiver)
+    case $2 in
+      on) receiveron
+      ;;
+      off) receiveroff
+      ;;
+      hdmi) receiverhdmi
+      ;;
+      jack1) receiverjack1
+      ;;
+      jack2) receiverjack2
+      ;;
+      optical) receiveroptical
+      ;;
+      tuner) receivertuner
+      ;;
+      *) usage
+    esac
+    ;;
   *)
     usage
     ;;
-esac 
+esac 2>&1 | logger -t $0
 exit
 if [ "$1" = "off" ]
 then

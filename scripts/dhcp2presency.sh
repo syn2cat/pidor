@@ -23,7 +23,7 @@ do
       n=$((n+1))
     fi
   else
-    logger -t $(basename $0) "dhcp $i is not pingable anymore"
+    #logger -t $(basename $0) "dhcp $i is not pingable anymore"
     if [ $(stat -c %Y /run/dhcp-leases/$i) -lt $(date --date "1 hour ago" +%s) ]
     then
       logger -t $(basename $0) "removing dhcp $i after one hour"

@@ -8,6 +8,10 @@ do
   then
     cat /var/run/spacestatus
   fi
+  if [ "$cmd" = "peoplecounter" ]
+  then
+    tail -1 /run/peoplecounter
+  fi
   
   if [ "$cmd" = "flashon" ]
   then

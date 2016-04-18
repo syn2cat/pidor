@@ -11,7 +11,7 @@ fi
 STATSFILE="/run/peoplecounter$DEV"
 SAMPLES=20 # how many records to keep in file
 INTERVAL=10 # how long to wait between polls
-MAXFILE="/root/var/peoplecountermax$DEV"
+MAXFILE="/var/cache/peoplecountermax$DEV"
 PRESENCY="/run/presency$DEV"   # value shown on website
 # /run/peoplecounter lists all recent reads, newest at end
 # let's have some management functions instead of a database
@@ -72,6 +72,7 @@ do
       then
         logger $(basename $0) setting max to $curmax because bigger than ${oldmax:-}
         echo "$curmax" > "$MAXFILE"
+        chmod a+rw "$MAXFILE"
       fi
     fi
     oldaverage="$(cat "$PRESENCY")"
