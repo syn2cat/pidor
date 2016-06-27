@@ -3,8 +3,8 @@ if [ "$1" = "" ]
 then
   echo "usage: $0 {main|chill|status|labsocket|alarm|screen} {on|off}"
   echo "usage: $0 {projector} {on|hdmi1|hdmi2|dvi|vga1|off}"
-  echo "usage; $0 {receiver} {on|off|hdmi|jack1|jack2|optical}"
-  echo "usage: $0 {maindoor} {open}"
+  echo "usage; $0 {receiver} {on|off|hdmi|jack1|jack2|optical|vol-|vol+}"
+#  echo "usage: $0 {maindoor} {open}"
   exit 1
 fi
 function dolight() {
@@ -36,8 +36,8 @@ function dolight() {
          ;;
     receiver)  sudo /root/pidor/scripts/beamercontrol.sh receiver "$2"
          ;;
-    maindoor)  sudo /root/pidor/scripts/opendoor.sh
-         ;;
+#    maindoor)  sudo /root/pidor/scripts/opendoor.sh
+#         ;;
   esac
   #                       type (2=10bit)
   #                       | house 1-16 (the dial thingie)

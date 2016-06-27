@@ -50,9 +50,9 @@ if ( $currentStatus != $previousStatus ) {
 
     case 'closed':
       $peopleMax="";
-      if($peopleMax=file_get_contents("/var/spool/peoplecountermax")) {
+      if($peopleMax=file_get_contents("/var/cache/peoplecountermax")) {
         $peopleMax=str_replace("\n", '', $peopleMax);
-        file_put_contents("/var/spool/peoplecountermax","0");
+        file_put_contents("/var/cache/peoplecountermax","0");
         if($peopleMax>8) {    // only write this info if the place has been quite busy
           $peopleMax="There were up to $peopleMax hackers today.\n";
         } else {

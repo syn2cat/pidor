@@ -42,7 +42,7 @@ doorlockbutton="$(cat /run/doorlockbutton)"
 nai=$(stat -c "%Y" /run/spacestatus)    # get mtime as status change time
 if [ "$status" = "open" ]
 then
-  /usr/bin/curl --max-time 1 --silent --data key="$spaceapikey" --data-urlencode sensors='{"state":{"open":true,"lastchange":'"$nai"'}}' http://spaceapi.syn2cat.lu/sensor/set
+  /usr/bin/curl --max-time 1 --silent --insecure --data key="$spaceapikey" --data-urlencode sensors='{"state":{"open":true,"lastchange":'"$nai"'}}' http://spaceapi.syn2cat.lu/sensor/set
   #logger -t $(basename $0) "$$ sending status $status to spacapi ret=$?"
 fi
 for plugin in $(ls "$0".d)
@@ -60,7 +60,7 @@ then
   # problem: if closing state but not actually shuting door for a longer time, the status in spaceapi
   # will be the time of closing but not that of actually shutting the door
   # but the status will only be updated once the door is shut
-  /usr/bin/curl --max-time 1 --silent --data key="$spaceapikey" --data-urlencode sensors='{"state":{"open":false,"lastchange":'"$nai"'}}' http://spaceapi.syn2cat.lu/sensor/set
+  /usr/bin/curl --max-time 1 --silent --insecure --data key="$spaceapikey" --data-urlencode sensors='{"state":{"open":false,"lastchange":'"$nai"'}}' http://spaceapi.syn2cat.lu/sensor/set
   #logger -t $(basename $0) "$$ sending status $status to spacapi ret=$?"
 fi
 
@@ -74,5 +74,5 @@ if [ "$status" = "closed" ]
 then
   presency=0
 fi
-/usr/bin/curl --max-time 1 --silent --data key="$spaceapikey" --data-urlencode sensors='{"sensors":{"people_now_present":[{"value":'"$presency"'}]}}' http://spaceapi.syn2cat.lu/sensor/set
+/usr/bin/curl --max-time 1 --silent --insecure --data key="$spaceapikey" --data-urlencode sensors='{"sensors":{"people_now_present":[{"value":'"$presency"'}]}}' http://spaceapi.syn2cat.lu/sensor/set
 V

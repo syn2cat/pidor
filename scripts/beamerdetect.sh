@@ -26,7 +26,8 @@ then
     exit
   fi
   signalsource="$(wget -qO - 'http://'"$projip"'/tgi/return.tgi?query=info' |awk -F'[<>]' '/<info>/{print substr($3,33,2)}')"
-  if [ "$signalsource" = "00" ] || [ "$signalsource" = "15" ] || [ "$signalsource" = "" ]
+  #if [ "$signalsource" = "00" ] || [ "$signalsource" = "15" ] || [ "$signalsource" = "" ]
+  if [ "$signalsource" = "00" ] || [ "$signalsource" = "02" ] || [ "$signalsource" = "" ]
   then
     raisescreen
     echo "wget http://$projip/tgi/return.tgi?command=2a3102fd0660 #projector off"
