@@ -3,7 +3,7 @@ if [ "$1" = "" ]
 then
   echo "usage: $0 {main|chill|status|labsocket|alarm|screen} {on|off}"
   echo "usage: $0 {projector} {on|hdmi1|hdmi2|dvi|vga1|off}"
-  echo "usage; $0 {receiver} {on|off|hdmi|jack1|jack2|optical|vol-|vol+}"
+  echo "usage; $0 {receiver} {on|off|hdmi|jack1|jack2|optical|tuner|cd|vol-|vol+}"
 #  echo "usage: $0 {maindoor} {open}"
   exit 1
 fi

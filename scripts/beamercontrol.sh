@@ -85,6 +85,10 @@ function receivertuner() {
   echo "Switching receiver to tuner"
   ssh pi@doorbuzz '/usr/bin/irsend SEND_ONCE pioneer "KEY_TUNER"'
 }
+function receivercd() {
+  echo "Switching receiver to cd"
+  ssh pi@doorbuzz '/usr/bin/irsend SEND_ONCE pioneer "KEY_CD"'
+}
 function receivervolumeup() {
   echo "Turning reciever volume up"
   ssh pi@doorbuzz '/usr/bin/irsend SEND_ONCE pioneer "KEY_VOLUMEUP"'
@@ -144,6 +148,8 @@ case $1 in
       optical) receiveroptical
       ;;
       tuner) receivertuner
+      ;;
+      cd) receivercd
       ;;
       "vol+") receivervolumeup
       ;;
