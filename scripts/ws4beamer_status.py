@@ -2,13 +2,17 @@
 import requests
 import flask
 import re
+import os
+
+with open( os.path.dirname(os.path.realpath(__file__)) + "/beamerip.txt", 'r') as f:
+    beamerip = f.readline()
 
 app = flask.Flask(__name__)
 
 @app.route("/")
 def status():
     try:
-      res = requests.get("http://10.2.113.7/tgi/return.tgi?query=info", timeout=1)
+      res = requests.get("http://"+beamerip+"/tgi/return.tgi?query=info", timeout=1)
       if "NG" in res.content:
         return "0"
       reg_res = re.findall(b"<info>([^<]*)</info>", res.content)

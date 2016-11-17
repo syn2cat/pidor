@@ -27,8 +27,12 @@ then
   fi
   signalsource="$(wget -qO - 'http://'"$projip"'/tgi/return.tgi?query=info' |awk -F'[<>]' '/<info>/{print substr($3,33,2)}')"
   #if [ "$signalsource" = "00" ] || [ "$signalsource" = "15" ] || [ "$signalsource" = "" ]
-  if [ "$signalsource" = "00" ] || [ "$signalsource" = "02" ] || [ "$signalsource" = "" ]
-  then
+  if [ "$signalsource" = "00" ] ||
+     [ "$signalsource" = "02" ] ||
+     [ "$signalsource" = "" ] ||
+     ( [ "$signalsource" = "15" ] && 
+       [ "$(cat /var/run/caststatus)" = "Backdrop" ] )
+  then   # port 15 is hdmi1 (chromecast) 
     raisescreen
     echo "wget http://$projip/tgi/return.tgi?command=2a3102fd0660 #projector off"
     wget -qO - 'http://'"$projip"'/tgi/return.tgi?command=2a3102fd0660' 2>&1 

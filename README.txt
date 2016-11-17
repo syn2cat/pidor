@@ -9,6 +9,7 @@ P0:2345:respawn:/root/pidor/scripts/lockbutton.sh
 P1:2345:respawn:/root/pidor/scripts/beamerdetect.sh
 P2:2345:respawn:/root/pidor/scripts/ws4beamer_status.py
 P3:2345:respawn:/root/pidor/scripts/peoplecounter-realtime.sh
+P4:2345:respawn:/root/pidor/scripts/caststatus.py
 
 put the beamer IP into beamerip.txt
 put the peoplecounter ip into peoplecounterip.txt
@@ -20,4 +21,11 @@ fill in the crontab
 needs an apache, for some silly historic reason, and for the lights commander
 cd ~/pidor/www && ./intallwebsite.sh
 
+If you have a chromecast, script to switch off if chromecast is iddle:
+cd ~/pidor
+git clone git@github.com:balloob/pychromecast.git
+cd pychromecast
+sudo apt-get install python-dev python-pip
+sudo pip install --upgrade pip
+sudo pip install -r requirements.txt
 

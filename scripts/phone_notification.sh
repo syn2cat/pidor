@@ -1,8 +1,9 @@
 #!/bin/bash
 
-url=http://10.2.113.137
+url=http://$(cat $(dirname "$0")"/phoneip.txt")
 run_file="/var/run/phone_ringing_status"
-
+new_status=0
+old_status=0
 while true
 do
   sleep 1

@@ -76,4 +76,4 @@ P0:2345:respawn:/root/pidor/scripts/lockbutton.sh
 P1:2345:respawn:/root/pidor/scripts/beamerdetect.sh
 P2:2345:respawn:/root/pidor/scripts/ws4beamer_status.py
 P3:2345:respawn:/root/pidor/scripts/peoplecounter-realtime.sh
-
+P4:2345:respawn:/root/pidor/scripts/caststatus.py
