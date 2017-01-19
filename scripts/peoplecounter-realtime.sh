@@ -10,7 +10,8 @@ else
 fi
 STATSFILE="/run/peoplecounter$DEV"
 SAMPLES=20 # how many records to keep in file
-INTERVAL=10 # how long to wait between polls
+INTERVAL=0 # how long to wait between polls
+INTERVALSKIP=20 # poll with INTERVAL but only consider every INTERVALSKIP's for SAMPLES
 MAXFILE="/var/cache/peoplecountermax$DEV"
 PRESENCY="/run/presency$DEV"   # value shown on website
 # /run/peoplecounter lists all recent reads, newest at end
@@ -52,6 +53,7 @@ function addcount() {
 }
 PEOPLECOUNTERIP=$(cat $(dirname "$0")"/peoplecounterip.txt")
 state="online"
+rtoldp=0
 while true
 do
   # scrape new value
@@ -59,22 +61,43 @@ do
     wget -qO - "http://$PEOPLECOUNTERIP/output.cgi?t=$(date +%s)" |
     sed 's/.*Occupancy://'|
     awk '{print $2}')"
+  # echo "p=$p" # debug
   if [ "$p" != "" ]  # oh we got something
   then
     oldp="$(getlastpeople)"
-    addcount "$p"
-    if [ "$p" != "$oldp" ]
+    skipcounter=$((skipcounter+1))
+    if [ $skipcounter -gt $INTERVALSKIP ]
     then
-      logger $(basename $0) changed from $oldp to $p people
-      curmax=$(getmaxpeople)
-      oldmax=$(cat "$MAXFILE")
-      if [ "$curmax" -gt "${oldmax:-0}" ]
+      # echo "skipcounter expired. updating" # debug
+      skipcounter=0
+      addcount "$p"
+      # if max then call this:
+      if [ "$p" != "$oldp" ]
       then
-        logger $(basename $0) setting max to $curmax because bigger than ${oldmax:-}
-        echo "$curmax" > "$MAXFILE"
-        chmod a+rw "$MAXFILE"
+        logger $(basename $0) changed from $oldp to $p people
+        curmax=$(getmaxpeople)
+        oldmax=$(cat "$MAXFILE")
+        if [ "$curmax" -gt "${oldmax:-0}" ]
+        then
+          logger $(basename $0) setting max to $curmax because bigger than ${oldmax:-}
+          echo "$curmax" > "$MAXFILE"
+          chmod a+rw "$MAXFILE"
+        fi
       fi
     fi
+    if [ $p -gt $rtoldp ]
+    then
+      # echo "p($p) -gt rtoldp($rtoldp)" # debug
+      aplay '/root/win/Windows XP Logon Sound.wav'
+    fi
+    if [ $p -lt $rtoldp ]
+    then
+      # echo "p($p) -lt rtoldp($rtoldp)" # debug
+      aplay '/root/win/Windows XP Logoff Sound.wav'
+    fi
+    # echo "rtoldp=$p" # debug
+    rtoldp=$p
+
     oldaverage="$(cat "$PRESENCY")"
     newaverage=$(getaveragepeople)
     #logger $(basename $0) averages o=$oldaverage n=$newaverage

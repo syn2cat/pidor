@@ -1,0 +1,11 @@
+#!/bin/bash
+if [ "$1" = "released" ]
+then
+  :
+  #  espeak -s 130 "Welcome to Level2."  2>/dev/null
+fi
+if [ "$1" = "pushed" ]
+then
+  #espeak -s 130 "Thank you for waiting. I am done. Have a nice day."  2>/dev/null
+  aplay '/root/win/Windows XP Shutdown.wav'
+fi

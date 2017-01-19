@@ -1,0 +1,20 @@
+#!/bin/bash
+(
+if [ "$1" = "released" ]
+then
+  sleep 2
+  aplay '/root/win/Windows XP Startup.wav'
+  #espeak -s 130 "Welcome to Level2."  2>/dev/null
+fi
+if [ "$1" = "pushed" ]
+then
+  aplay '/root/win/Windows XP Critical Error.wav'
+  sleep 1
+  aplay '/root/win/Windows XP Critical Stop.wav'
+  #espeak -s 130 "Level2 is closing." 2>/dev/null
+  #espeak -s 120 -p 80 "Please wait, until all lights are off."  2>/dev/null
+  sleep 1
+  #espeak -s 120 -p 80 "I will tell you when I am finished."  2>/dev/null
+  aplay '/root/win/Windows XP Logoff.wav'
+fi
+) &
