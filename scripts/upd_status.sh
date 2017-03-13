@@ -32,12 +32,17 @@ then
   else
     logger -t $(basename $0) "$$ never run before (new install?) setting spacestatus to closed"
     echo "closed" > /run/spacestatus
+    echo "closed" > /root/var/spacestatus
   fi
   chown www-data /run/spacestatus
 fi
 
 status="$(cat /run/spacestatus)"
 oldstatus="$(cat /root/var/spacestatus)"
+if [ "$oldstatus" = "" ]
+then
+  oldstatus="$status"
+fi
 doorlockbutton="$(cat /run/doorlockbutton)"
 nai=$(stat -c "%Y" /run/spacestatus)    # get mtime as status change time
 if [ "$status" = "open" ]
