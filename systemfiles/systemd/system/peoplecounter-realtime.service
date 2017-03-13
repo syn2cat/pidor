@@ -1,0 +1,10 @@
+[Unit]
+Description=lockbutton
+After=getty.target
+
+[Service]
+ExecStart=/root/pidor/scripts/peoplecounter-realtime.sh
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

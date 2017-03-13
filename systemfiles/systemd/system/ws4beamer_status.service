@@ -1,0 +1,10 @@
+[Unit]
+Description=lockbutton
+After=getty.target
+
+[Service]
+ExecStart=/root/pidor/scripts/ws4beamer_status.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

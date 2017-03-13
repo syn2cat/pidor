@@ -1,0 +1,10 @@
+[Unit]
+Description=lockbutton
+After=getty.target
+
+[Service]
+ExecStart=/root/pidor/scripts/lockbutton.sh
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
