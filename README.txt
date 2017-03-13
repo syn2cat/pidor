@@ -9,12 +9,13 @@ put raspian image on SD card and put into rPi
 ssh to pi@<ip address>
 if that does not work, edit the SD card and put into etc/rc.local "/etc/init.d/ssh start"
 sudo bash   # all is installed under root 
-apt-get install php-curl # for twitter
+apt-get install php5-curl # for twitter
 apt-get install git # for getting this
 apt-get install wiringpi # bor the buttons and stuff
 
 cp -p systemfiles/sudoers.d/* /etc/sudoers.d/
 
+mkdir /root/var    # kinda important
 put your ssh key in git and on the pi's /root/.ssh
 
 cd /root
