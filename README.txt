@@ -3,6 +3,39 @@ Pidor is controlling the state of Level2 on the website, spaceapi and twitter
 This documentation is work in progress, sorry about that.
 
 Install
+
+put raspian image on SD card and put into rPi
+
+ssh to pi@<ip address>
+if that does not work, edit the SD card and put into etc/rc.local "/etc/init.d/ssh start"
+sudo bash   # all is installed under root 
+apt-get install php-curl # for twitter
+apt-get install git # for getting this
+apt-get install wiringpi # bor the buttons and stuff
+
+cp -p systemfiles/sudoers.d/* /etc/sudoers.d/
+
+put your ssh key in git and on the pi's /root/.ssh
+
+cd /root
+git clone git@github.com:syn2cat/pidor.git
+cd pidor
+git config --global user.email "pidor@level2.lu"
+git config --global user.name pidor
+
+
+# set fixed IP at end of /etc/dhcpcd.conf
+interface eth0
+static ip_address=10.10.10.10/24
+static routers=10.10.10.1
+static domain_name_servers=10.10.10.1
+
+
+put discard (for fstrim) in fstab
+/dev/mmcblk0p2  /               ext4    discard,defaults,noatime  0       1
+
+reboot
+
 put this in /etc/inittab (see example in systemfiles/inittab)
 # pidor
 P0:2345:respawn:/root/pidor/scripts/lockbutton.sh
@@ -11,15 +44,30 @@ P2:2345:respawn:/root/pidor/scripts/ws4beamer_status.py
 P3:2345:respawn:/root/pidor/scripts/peoplecounter-realtime.sh
 P4:2345:respawn:/root/pidor/scripts/caststatus.py
 
+cd systemfiles/
+cp -p systemd/system/* /etc/systemd/system/
+systemctl enable lockbutton.service beamerdetect.service ws4beamer_status.service peoplecounter-realtime.service caststatus.service
+systemctl daemon-reload
+systemctl start lockbutton.service beamerdetect.service ws4beamer_status.service peoplecounter-realtime.service caststatus.service
+
+
+
+
 put the beamer IP into beamerip.txt
 put the peoplecounter ip into peoplecounterip.txt
+put entry for doorbuzz in /etc/hosts
+
+ln lightcommander /usr/local/bin/    # this is quite important
 
 fill in the crontab
 * * * * * /root/pidor/scripts/dhcp2presency.sh
 * * * * * /root/pidor/scripts/upd_status.sh > /run/spacestatus.out 2>&1
 
-needs an apache, for some silly historic reason, and for the lights commander
+
+#needs an apache for the lights commander
+apt-get install apache2 php5
 cd ~/pidor/www && ./intallwebsite.sh
+service apache2 restart
 
 If you have a chromecast, script to switch off if chromecast is iddle:
 cd ~/pidor
