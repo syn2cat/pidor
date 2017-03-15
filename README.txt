@@ -2,6 +2,12 @@ Pidor is controlling the state of Level2 on the website, spaceapi and twitter
 
 This documentation is work in progress, sorry about that.
 
+Connectivity
+connect the doorlock relay to gpio 7
+connect button of doorlock to gpio 11
+connect the 433mhz transmitter to pin 2 (gpio 17)
+
+
 Install
 
 put raspian image on SD card and put into rPi
@@ -11,7 +17,7 @@ if that does not work, edit the SD card and put into etc/rc.local "/etc/init.d/s
 sudo bash   # all is installed under root 
 apt-get install php5-curl # for twitter
 apt-get install git # for getting this
-apt-get install wiringpi # bor the buttons and stuff
+apt-get install wiringpi # for the buttons and stuff
 
 tzselect
 
