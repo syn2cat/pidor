@@ -18,6 +18,25 @@ function beamerquery() {
   fi
   echo "$signalsource"
 }
+#             vv-- volume
+# 2a3140bf1c150a3230072a0101050300010001000001000100010185</control>
+#          1111111111222
+# 1234567890123456789012
+function beamervolumedown() {
+  curvol="ff"
+  rept=20 
+  while [ "$curvol" != "00" ] && [ $rept -gt 0 ]
+  do
+    curvol="$(wget -qO - 'http://'"$projip"'/tgi/return.tgi?query=control' |awk -F'[<>]' '/<control>/{print substr($3,13,2)}')"
+    echo "beamervolume was: $curvol"
+    if [ "$curvol" != "00" ]
+    then
+      wget -qO - 'http://'"$projip"'/tgi/return.tgi?command=2a310bf4070263'
+    fi
+    rept=$((rept-1))
+  done
+}
+
 function beameroff() {
   echo "Switching beamer off"
   wget -qO/dev/null http://$projip/tgi/return.tgi?command=2a3102fd0660 #projector off
@@ -98,7 +117,7 @@ function receivervolumedown() {
   ssh pi@doorbuzz '/usr/bin/irsend SEND_ONCE pioneer "KEY_VOLUMEDOWN"'
 }
 function usage() {
-  echo "Usage: $0 (beamer|screen) (on|dvi|hdmi1|hdmi2|vga|off|down|up)"
+  echo "Usage: $0 (beamer|screen|receiver) (on|dvi|hdmi1|hdmi2|vga|off|down|up|vol-|vol+)"
   exit
 }
 projip="$(cat $(dirname "$0")"/beamerip.txt")"
@@ -120,6 +139,8 @@ case $1 in
              beameron && hdmi2
         ;;
       vga1) vga1 ; beameron && vga1
+        ;;
+      "vol-") beamervolumedown 
         ;;
       *) usage
     esac

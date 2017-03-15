@@ -5,7 +5,8 @@ sys.path.append(os.path.dirname(__file__) + "/../pychromecast/")
 import pychromecast
 #mycastname=pychromecast.get_chromecasts_as_dict().keys()[0]
 mycastname="Level2 Chillcast DVI1"
-cast = pychromecast.get_chromecast(friendly_name=mycastname)
+chromecasts = pychromecast.get_chromecasts()
+cast=next(cc for cc in chromecasts if cc.device.friendly_name == mycastname)
 cast.wait()
 print(cast.device.friendly_name)
 offlinetime=0
