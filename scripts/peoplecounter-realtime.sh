@@ -13,6 +13,7 @@ SAMPLES=20 # how many records to keep in file
 INTERVAL=0 # how long to wait between polls
 INTERVALSKIP=20 # poll with INTERVAL but only consider every INTERVALSKIP's for SAMPLES
 MAXFILE="/var/cache/peoplecountermax$DEV"
+PRESENCYRT="/run/presencyrt$DEV"
 PRESENCY="/run/presency$DEV"   # value shown on website
 # /run/peoplecounter lists all recent reads, newest at end
 # let's have some management functions instead of a database
@@ -87,11 +88,13 @@ do
     fi
     if [ $p -gt $rtoldp ]
     then
+      echo "$p" > "$PRESENCYRT"
       # echo "p($p) -gt rtoldp($rtoldp)" # debug
       aplay '/root/win/Windows XP Logon Sound.wav'
     fi
     if [ $p -lt $rtoldp ]
     then
+      echo "$p" > "$PRESENCYRT"
       # echo "p($p) -lt rtoldp($rtoldp)" # debug
       aplay '/root/win/Windows XP Logoff Sound.wav'
     fi

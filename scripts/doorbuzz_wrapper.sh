@@ -10,7 +10,7 @@ do
   fi
   if [ "$cmd" = "peoplecounter" ]
   then
-    tail -1 /run/peoplecounter
+    tail -1 /run/presencyrt
   fi
   
   if [ "$cmd" = "flashon" ]
