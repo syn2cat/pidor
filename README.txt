@@ -13,6 +13,8 @@ apt-get install php5-curl # for twitter
 apt-get install git # for getting this
 apt-get install wiringpi # bor the buttons and stuff
 
+tzselect
+
 cp -p systemfiles/sudoers.d/* /etc/sudoers.d/
 
 mkdir /root/var    # kinda important
@@ -69,6 +71,13 @@ fill in the crontab
 apt-get install apache2 php5
 cd ~/pidor/www && ./intallwebsite.sh
 service apache2 restart
+
+# download windos sound bytes to /root/win
+# e.g. here http://joshlalonde.deviantart.com/art/Windows-XP-Sounds-158309567
+# 
+mkdir /root/win
+cd /root/win
+
 
 If you have a chromecast, script to switch off if chromecast is iddle:
 cd ~/pidor
