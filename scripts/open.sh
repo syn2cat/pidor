@@ -1,4 +1,4 @@
 #!/bin/bash
-/usr/local/bin/gpio mode 7 out
-/usr/local/bin/gpio write 7 0
+gpio mode 7 out
+gpio write 7 0
 
