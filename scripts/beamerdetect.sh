@@ -79,7 +79,7 @@ do
 #  logger -t "$(basename $0) $$" "source=$signalsource cast=$(cat /var/run/caststatus)"
   sleep 10
   caststatus="$(cat /var/run/caststatus)"
-  if [ "$caststatus" != "Backdrop" ] &&
+  if [ "$caststatus" != "Backdrop" ] && [ "$caststatus" != "None" ] &&
      ( [ "$signalsource" = "" ] ||
        [ "$signalsource" = "00" ] ||
        [ "$signalsource" = "02" ] )
