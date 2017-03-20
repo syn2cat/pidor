@@ -45,6 +45,7 @@ put discard (for fstrim) in fstab
 
 reboot
 
+NO systemd:
 put this in /etc/inittab (see example in systemfiles/inittab)
 # pidor
 P0:2345:respawn:/root/pidor/scripts/lockbutton.sh
@@ -53,6 +54,7 @@ P2:2345:respawn:/root/pidor/scripts/ws4beamer_status.py
 P3:2345:respawn:/root/pidor/scripts/peoplecounter-realtime.sh
 P4:2345:respawn:/root/pidor/scripts/caststatus.py
 
+WITH systemd
 cd systemfiles/
 cp -p systemd/system/* /etc/systemd/system/
 systemctl enable lockbutton.service beamerdetect.service ws4beamer_status.service peoplecounter-realtime.service caststatus.service
@@ -60,6 +62,8 @@ systemctl daemon-reload
 systemctl start lockbutton.service beamerdetect.service ws4beamer_status.service peoplecounter-realtime.service caststatus.service
 
 
+# get beamer status on port 5042
+apt-get install python-flask
 
 
 put the beamer IP into beamerip.txt
