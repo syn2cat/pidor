@@ -48,7 +48,7 @@ function beameron() {
   if [ "$currstatus" = "off" ]
   then
     echo "Waiting for beamer to boot..."
-    sleep 15
+    sleep 18
     echo "... is now booted"
     return 0
   fi

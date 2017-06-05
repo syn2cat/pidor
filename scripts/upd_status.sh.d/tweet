@@ -15,7 +15,7 @@ $statusTag = '#statusUpdate';
 // Set the messages to tweet when the status of the hackspace changes
 // %s is going to be replaced by the current time to avoid duplicate tweets on Twitter
 $messageOpen    = "It's %s and we are open \o/ \ncome in and create something awesome =) \nhttps://Level2.lu/openingTimes";
-$messageClosed  = "We just closed our doors at %s \n%sSee you very soon... \nhttps://Level2.lu/openingTimes";
+$messageClosed  = "We just closed our doors at %s%s See you very soon... \nhttps://Level2.lu/openingTimes";
 
 require_once('TwitterAPIExchange.php');
 
@@ -54,9 +54,9 @@ if ( $currentStatus != $previousStatus ) {
         $peopleMax=str_replace("\n", '', $peopleMax);
         file_put_contents("/var/cache/peoplecountermax","0");
         if($peopleMax>8) {    // only write this info if the place has been quite busy
-          $peopleMax="There were up to $peopleMax hackers today.\n";
+          $peopleMax="\nThere were up to $peopleMax hackers today.\n";
         } else {
-          $peopleMax="";
+          $peopleMax=str_repeat('.',$peopleMax);
         }
       } else {
         $peopleMax="";

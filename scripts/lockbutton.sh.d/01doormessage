@@ -8,6 +8,8 @@ then
 fi
 if [ "$1" = "pushed" ]
 then
+  oldvol="$(amixer get PCM |awk -F'[][]' '/: Playback.*%/{print $2}')"
+  amixer set PCM 5%
   aplay '/root/win/Windows XP Error.wav'
   sleep 1
   aplay '/root/win/Windows XP Critical Stop.wav'
@@ -16,5 +18,6 @@ then
   sleep 1
   #espeak -s 120 -p 80 "I will tell you when I am finished."  2>/dev/null
   aplay '/root/win/Windows XP Logoff Sound.wav'
+  amixer set PCM "$oldvol"
 fi
 ) &

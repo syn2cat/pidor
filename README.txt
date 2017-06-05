@@ -18,8 +18,12 @@ sudo bash   # all is installed under root
 apt-get install php5-curl # for twitter
 apt-get install git # for getting this
 apt-get install wiringpi # for the buttons and stuff
+apt-get install gawk # raspian has mawk by default which lacks time functions
 
 tzselect
+
+comment out the last 4 lines of rsyslogd.conf (for xconsole)
+like explained here https://www.raspberrypi.org/forums/viewtopic.php?f=91&t=122601
 
 cp -p systemfiles/sudoers.d/* /etc/sudoers.d/
 

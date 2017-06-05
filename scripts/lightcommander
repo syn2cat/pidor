@@ -36,6 +36,8 @@ function dolight() {
          ;;
     receiver)  sudo /root/pidor/scripts/beamercontrol.sh receiver "$2"
          ;;
+    stealth)  sudo /root/pidor/scripts/stealth.sh
+         ;;
 #    maindoor)  sudo /root/pidor/scripts/opendoor.sh
 #         ;;
   esac
