@@ -10,7 +10,7 @@ else
 fi
 STATSFILE="/run/peoplecounter$DEV"
 SAMPLES=20 # how many records to keep in file
-INTERVAL=0 # how long to wait between polls
+INTERVAL=1 # how long to wait between polls
 INTERVALSKIP=20 # poll with INTERVAL but only consider every INTERVALSKIP's for SAMPLES
 MAXFILE="/var/cache/peoplecountermax$DEV"
 PRESENCYRT="/run/presencyrt$DEV"
@@ -59,7 +59,7 @@ while true
 do
   # scrape new value
   p="$(
-    wget -qO - "http://$PEOPLECOUNTERIP/output.cgi?t=$(date +%s)" |
+    wget --tries=3 --timeout=2 -qO - "http://$PEOPLECOUNTERIP/output.cgi?t=$(date +%s)" |
     sed 's/.*Occupancy://'|
     awk '{print $2}')"
   # echo "p=$p" # debug
@@ -113,12 +113,17 @@ do
     then
       state="online"
       logger $(basename $0) people counter online
+      $(dirname "$0")"/mkmail.py 'peoplecounter level2 online' 'peoplecounter is now reachable'
+      #python -c 'import smtplib ; server = smtplib.SMTP("mail.syn2cat.lu", 25) ; msg = "Subject: peoplecounter level2 onfline\n\npeoplecounter is now reachable" ; server.sendmail("gkess@pt.lu", "gunstick@syn2cat.lu", msg) ; server.quit()'
     fi
   else
     if [ "$state" = "online" ]
     then
       state="offline"
       logger $(basename $0) people counter offline
+      $(dirname "$0")"/mkmail.py 'peoplecounter level2 offline' 'peoplecounter was not reachable'
+      #python -c 'import smtplib ; server = smtplib.SMTP("mail.syn2cat.lu", 25) ; msg = "Subject: peoplecounter level2 offline\n\npeoplecounter was not reachable" ; server.sendmail("gkess@pt.lu", "gunstick@syn2cat.lu", msg) ; server.quit()'
+
     fi
   fi
   sleep "$INTERVAL"

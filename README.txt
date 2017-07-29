@@ -25,6 +25,10 @@ tzselect
 comment out the last 4 lines of rsyslogd.conf (for xconsole)
 like explained here https://www.raspberrypi.org/forums/viewtopic.php?f=91&t=122601
 
+echo "pidor" > /etc/hostname
+sed -i 's/^127.0.1.1.*/127.0.1.1 pidor/' /etc/hosts
+
+
 cp -p systemfiles/sudoers.d/* /etc/sudoers.d/
 
 mkdir /root/var    # kinda important

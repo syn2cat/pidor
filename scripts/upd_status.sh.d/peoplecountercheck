@@ -3,16 +3,24 @@
 if [ "$1" = "closed" ] && [ "$2" = "open" ]
 then
   p="$(tail -1 /run/peoplecounter)"
-  if [ "$p" != "0" ]
+  pp="$(tac /run/peoplecounter | awk -v p="$p" 'p!=$1 {print;exit}')"   # get previous count. this may fail if people exit and after long time close door
+  if [ "$pp" = "" ]
   then
-    logger $(basename $0) There are $p people, closed door from inside. Waiting 1 min. 
+    pp=0   # if no variation found, don not do anything
+  fi
+  if [ "$p" != "0" ] &&  # there are people present
+     [ "$p" -ge "$pp" ]  # nobody left i.e. current count is greater or equal to previous count
+  then
+    logger $(basename $0) There are $p people, previusly $pp, closed door from inside. Waiting 1 min. 
     sleep 60
-    p="$(tail -1 /run/peoplecounter)"
-    if [ "$p" = "0" ]
+    np="$(tail -1 /run/peoplecounter)"
+    if [ "$np" -lt "$p" ]   # new count is lower than previous
     then
-      logger $(basename $0) There are $p people, after 1 min wait. All OK.
+      logger $(basename $0) There are now $np people, after 1 min wait. All OK.
     else
-      logger $(basename $0) There are $p people, after 1 min. Maybe ALARM
+      logger $(basename $0) There are $np people, after 1 min. Maybe ALARM
+      python -c 'import smtplib ; server = smtplib.SMTP("mail.syn2cat.lu", 25) ; msg = "Subject: ALARM level2 intruder\n\ndoor closed with people inside" ; server.sendmail("gkess@pt.lu", "gunstick@syn2cat.lu", msg) ; server.quit()'
+
     fi
   else
     logger $(basename $0) There are $p people, correctly closed door from outside. All OK.
