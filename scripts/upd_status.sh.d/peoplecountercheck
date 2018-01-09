@@ -19,7 +19,7 @@ then
       logger $(basename $0) There are now $np people, after 1 min wait. All OK.
     else
       logger $(basename $0) There are $np people, after 1 min. Maybe ALARM
-      python -c 'import smtplib ; server = smtplib.SMTP("mail.syn2cat.lu", 25) ; msg = "Subject: ALARM level2 intruder\n\ndoor closed with people inside" ; server.sendmail("gkess@pt.lu", "gunstick@syn2cat.lu", msg) ; server.quit()'
+      python -c 'import smtplib ; import sys ; server = smtplib.SMTP("mail.syn2cat.lu", 25) ; msg = "Subject: ALARM level2 intruder\n\ndoor closed with "+sys.argv[1]+" people inside" ; server.sendmail("gkess@pt.lu", "gunstick@syn2cat.lu", msg) ; server.quit()' "$np"
 
     fi
   else

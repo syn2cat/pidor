@@ -30,10 +30,12 @@ then
   if [ "$signalsource" = "00" ] ||
      [ "$signalsource" = "02" ] ||
      [ "$signalsource" = "" ] ||
-     ( [ "$signalsource" = "15" ] && 
-       [ "$(cat /var/run/caststatus)" = "Backdrop" ] )
+     [ "$signalsource" = "15" ]     # always switch off if on chromecast
+#     ( [ "$signalsource" = "15" ] && 
+#       [ "$(cat /var/run/caststatus)" = "Backdrop" ] )
   then   # port 15 is hdmi1 (chromecast) 
     raisescreen
+    lightcommander projector dvioff # swith to slideshow and off
     lightcommander projector vol-
     echo "wget http://$projip/tgi/return.tgi?command=2a3102fd0660 #projector off"
     lightcommander projector off
@@ -60,8 +62,8 @@ do
   # from the acer webpage we read that bytes 30-31 contain 00 if power off and 01 if power on
   # we only test if 01, because if off, it can also give no response
   # but seems to be bytes 32-33 more accurate
-  signalsource="$(wget -qO - 'http://'"$projip"'/tgi/return.tgi?query=info'|awk -F'[<>]' '/<info>/{print substr($3,31,2)}')"  
-  if [ "$signalsource" = "01" ]
+  projectorstate="$(wget -qO - 'http://'"$projip"'/tgi/return.tgi?query=info'|awk -F'[<>]' '/<info>/{print substr($3,31,2)}')"  
+  if [ "$projectorstate" = "01" ]
   then
     if [ "$prevstatus" != "on" ]
     then
@@ -78,13 +80,18 @@ do
   fi
 #  logger -t "$(basename $0) $$" "source=$signalsource cast=$(cat /var/run/caststatus)"
   sleep 10
+  signalsource="$(wget -qO - 'http://'"$projip"'/tgi/return.tgi?query=info' |awk -F'[<>]' '/<info>/{print substr($3,33,2)}')"
   caststatus="$(cat /var/run/caststatus)"
+  # bug: should only consider chromecast if beamer input is chromecast
+#  logger "ss=$signalsource s=$(cat /root/var/spacestatus) c=$caststatus"
   if [ "$caststatus" != "Backdrop" ] && [ "$caststatus" != "None" ] && [ "$caststatus" != "" ] &&
      ( [ "$signalsource" = "" ] ||
        [ "$signalsource" = "00" ] ||
-       [ "$signalsource" = "02" ] )
+       [ "$signalsource" = "02" ] ) && 
+     [ "$(cat /root/var/spacestatus)" = "open" ]
   then
     logger -t $(basename $0) "$$ signal on chromecast: $caststatus"
+    logger -t $(basename $0) "$$ switching from $signalsource to hdmi2"
     lightcommander projector hdmi2
     sleep 3
   fi

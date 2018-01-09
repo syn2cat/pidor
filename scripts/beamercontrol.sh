@@ -55,8 +55,16 @@ function beameron() {
   return 1
 }
 function dvi() {
-  echo "Switching to dvi"
-  wget -qO/dev/null http://$projip/tgi/return.tgi?command=2a3109f6070566 #switch to DVI
+  currstatus="$(beamerquery)"
+  if [ "$currstatus" = "02" ] || [ "$currstatus" = "off" ]
+  then
+    echo "not switching, already displaying DVI (or off)"
+    return 1
+  else
+    echo "Switching to dvi"
+    wget -qO/dev/null http://$projip/tgi/return.tgi?command=2a3109f6070566 #switch to DVI
+    return 0
+  fi
 }
 function hdmi1() {
   echo "Switching to hdmi1"
@@ -116,8 +124,12 @@ function receivervolumedown() {
   echo "Turning reciever volume down"
   ssh pi@doorbuzz '/usr/bin/irsend SEND_ONCE pioneer "KEY_VOLUMEDOWN"'
 }
+function bluray() {
+  echo "Sending bluray player $1"
+  ssh pi@doorbuzz '/usr/bin/irsend SEND_ONCE SONY_RMT_B104P '"KEY_$(tr [:lower:] [:upper:] <<<$1)"
+}
 function usage() {
-  echo "Usage: $0 (beamer|screen|receiver) (on|dvi|hdmi1|hdmi2|vga|off|down|up|vol-|vol+)"
+  echo "Usage: $0 (beamer|screen|receiver|bluray) (on|dvi|hdmi1|hdmi2|vga|off|down|up|left|right|vol-|vol+|query)"
   exit
 }
 projip="$(cat $(dirname "$0")"/beamerip.txt")"
@@ -128,7 +140,11 @@ case $1 in
         ;;
       off) beameroff
         ;;
-      dvi) dvi ; beameron && dvi
+      dvi) dvi && beameron && dvi
+        ;;
+      dvioff) dvi && beameroff
+        ;;
+      dvionly) dvi 
         ;;
       hdmi1) hdmi1 ; beameron && hdmi1
         ;;
@@ -142,6 +158,8 @@ case $1 in
         ;;
       "vol-") beamervolumedown 
         ;;
+      "query") beamerquery 
+        ;;
       *) usage
     esac
     ;;
@@ -150,6 +168,15 @@ case $1 in
       down|on) lowerscreen
       ;;
       up|off) raisescreen
+      ;;
+      *) usage
+    esac
+    ;;
+  bluray)
+    case $2 in
+      down|up|left|right|ok|audio|subtitle|menu|pause|play) bluray $2
+      ;;
+      on|off) bluray power
       ;;
       *) usage
     esac
@@ -182,4 +209,4 @@ case $1 in
   *)
     usage
     ;;
-esac 2>&1 | logger -t $0
+esac 2>&1 | tee >(logger -t $0)

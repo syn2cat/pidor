@@ -2,8 +2,9 @@
 if [ "$1" = "" ]
 then
   echo "usage: $0 {main|chill|status|labsocket|alarm|screen} {on|off}"
-  echo "usage: $0 {projector} {on|hdmi1|hdmi2|dvi|vga1|off|vol-}"
-  echo "usage; $0 {receiver} {on|off|hdmi|jack1|jack2|optical|tuner|cd|vol-|vol+}"
+  echo "usage: $0 projector {on|hdmi1|hdmi2|dvi|vga1|off|vol-|query}"
+  echo "usage: $0 receiver {on|off|hdmi|jack1|jack2|optical|tuner|cd|vol-|vol+}"
+  echo "usage: $0 bluray {down|up|left|right|ok|audio|subtitle|menu}"
 #  echo "usage: $0 {maindoor} {open}"
   exit 1
 fi
@@ -21,6 +22,10 @@ function dolight() {
          dolight "alarm" $2
          ;; 
     main)      sudo /root/pidor/rcswitch-pi/send 2 1A 1 "$setvalue"
+		if [ "$setvalue" = "0" ]  # switch off alarm light when switching off all lights
+		then
+		  sudo /root/pidor/rcswitch-pi/send 2 15A 1 "$setvalue"
+		fi
          ;; 
     chill)     sudo /root/pidor/rcswitch-pi/send 2 1A 2 "$setvalue"
          ;; 
@@ -28,13 +33,17 @@ function dolight() {
          ;; 
     labsocket) sudo /root/pidor/rcswitch-pi/send 2 15A 6 "$setvalue"
          ;; 
-    alarm)     sudo /root/pidor/rcswitch-pi/send 2 15A 1 "$setvalue"
+    alarm)     ( sudo /root/pidor/rcswitch-pi/send 2 15A 1 "$setvalue"
+		 sleep 1
+                 sudo /root/pidor/rcswitch-pi/send 2 15A 1 "$setvalue" ) &
          ;; 
     screen)    sudo /root/pidor/scripts/beamercontrol.sh screen "$2"
          ;;
     projector) sudo /root/pidor/scripts/beamercontrol.sh beamer "$2"
          ;;
     receiver)  sudo /root/pidor/scripts/beamercontrol.sh receiver "$2"
+         ;;
+    bluray)  sudo /root/pidor/scripts/beamercontrol.sh bluray "$2"
          ;;
     stealth)  sudo /root/pidor/scripts/stealth.sh
          ;;

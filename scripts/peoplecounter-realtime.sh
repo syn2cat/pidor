@@ -90,13 +90,23 @@ do
     then
       echo "$p" > "$PRESENCYRT"
       # echo "p($p) -gt rtoldp($rtoldp)" # debug
-      aplay '/root/win/Windows XP Logon Sound.wav'
+      for i in $(seq $((p-rtoldp))) 
+      do
+        logger "XP logon.wav"
+        aplay '/root/win/Windows XP Logon Sound.wav' &
+        sleep 0.2
+      done &
     fi
     if [ $p -lt $rtoldp ]
     then
       echo "$p" > "$PRESENCYRT"
       # echo "p($p) -lt rtoldp($rtoldp)" # debug
-      aplay '/root/win/Windows XP Logoff Sound.wav'
+      for i in $(seq $((rtoldp-p))) 
+      do
+        logger "XP logoff.wav"
+        aplay '/root/win/Windows XP Logoff Sound.wav' &
+        sleep 0.2
+      done &
     fi
     # echo "rtoldp=$p" # debug
     rtoldp=$p
