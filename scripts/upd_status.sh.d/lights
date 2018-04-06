@@ -27,7 +27,7 @@ fi
 if [ "$1" = "released" ] && # the door has been opened
 #   [ "$(cat /run/spacestatus)" = "open" ] &&   # status is open
 #   [ "$(stat -c %Y /run/spacestatus)" -gt "$(date --date "50 minutes ago" +%s)" ] &&  # since less than 5 minutes
-   ( [ "$(date +%s)" -gt $(/root/pidor/scripts/sunset) ] || [ "$(date +%s)" -lt $(/root/pidor/scripts/sunrise) ] ) 
+#   ( [ "$(date +%s)" -gt $(/root/pidor/scripts/sunset) ] || [ "$(date +%s)" -lt $(/root/pidor/scripts/sunrise) ] ) 
 then
    #( [ "$(date +%H)" -gt 18 ] || [ "$(date +%H)" -lt 8 ] ) 
   logger -t $(basename $0) "switching some lights on"

@@ -24,10 +24,10 @@ then   # switch status lights on, in any case
   $(dirname "$0")/../lightcommander status on
   # /usr/local/bin/433send 2 2A 1 1 #on
 fi
-if [ "$1" = "released" ] && # the door has been opened
+if [ "$1" = "released" ] # && # the door has been opened
 #   [ "$(cat /run/spacestatus)" = "open" ] &&   # status is open
 #   [ "$(stat -c %Y /run/spacestatus)" -gt "$(date --date "50 minutes ago" +%s)" ] &&  # since less than 5 minutes
-   ( [ "$(date +%s)" -gt $(/root/pidor/scripts/sunset) ] || [ "$(date +%s)" -lt $(/root/pidor/scripts/sunrise) ] ) 
+#   ( [ "$(date +%s)" -gt $(/root/pidor/scripts/sunset) ] || [ "$(date +%s)" -lt $(/root/pidor/scripts/sunrise) ] ) 
 then
    #( [ "$(date +%H)" -gt 18 ] || [ "$(date +%H)" -lt 8 ] ) 
   logger -t $(basename $0) "switching some lights on"

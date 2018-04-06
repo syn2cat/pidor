@@ -1,0 +1,18 @@
+Mounting height 2770	[mm] See operating instructions
+Detection area Xmin	-850 [mm] See operating instructions
+Wall at Xmin 	Wall Present
+Detection area Xmax	1000 [mm] See operating instructions
+Wall at Xmax 	No Wall
+Detection area Ymin	-600 [mm] See operating instructions
+Wall at Ymin 	No Wall
+Detection area Ymax	600 [mm] See operating instructions
+Wall at Ymax 	No Wall
+Forward direction +X	
+Virtual line	Curved Line
+Line offset	-200 [mm] See operating instructions
+Door opens	Away§	
+Door width	820 [mm] See operating instructions
+Door height 	2000 [mm] See operating instructions
+Door decentering	0 [mm] See operating instructions
+Min person height	1200 [mm] See operating instructions
+Device location	 Inside

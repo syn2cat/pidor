@@ -80,4 +80,35 @@ then
   presency=0
 fi
 /usr/bin/curl --max-time 1 --silent --data key="$spaceapikey" --data-urlencode sensors='{"sensors":{"people_now_present":[{"value":'"$presency"'}]}}' https://spaceapi.syn2cat.lu/sensor/set
+if [ $? -ne 0 ]
+then
+  if ! ping -c 1 8.8.8.8 >/dev/null
+  then
+    if [ -f /run/netdown.txt ]
+    then
+      :
+    else
+      touch /run/netdown.txt
+    fi
+    if [ "$status" = "open" ]
+    then
+      a=$(( $(date "+%s") - $(stat -c %Z /run/netdown.txt) ))   # difference in seconds
+      a=$((a/60))  # minutes
+      if [ "$a" -gt 20 ] # don't talk if the interruption is less than 20 minutes
+      then
+        if [ "$a" -lt 60 ]  # talk in hours later
+        then
+          espeak -s 100 "Network problem: The internet is not reachable since $a minutes."
+        else
+          if [ $((a%10)) = 0 ]  # only annoy every 10 minutes
+          then
+            espeak -s 100 "Network problem: The internet is not reachable since $((a/60)) hours and $((a%60)) minutes."
+          fi
+        fi
+      fi
+    fi
+  fi
+else
+  rm -f /run/var/netdown.txt   # reset
+fi
 V

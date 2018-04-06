@@ -8,6 +8,9 @@ then
 #  echo "usage: $0 {maindoor} {open}"
   exit 1
 fi
+#                                v---- group A=1, B=2, G=7
+#                                  v---- number
+# /root/pidor/rcswitch-pi/send 2 7 3 1 <-- 0=off 1=on
 function dolight() {
   if [ "$2" = "on" ]
   then
@@ -19,6 +22,7 @@ function dolight() {
     all) dolight "main" $2
          dolight "status" $2
          dolight "labsocket" $2
+         dolight "3dprinter" $2
          dolight "alarm" $2
          ;; 
     main)      sudo /root/pidor/rcswitch-pi/send 2 1A 1 "$setvalue"
@@ -37,6 +41,8 @@ function dolight() {
 		 sleep 1
                  sudo /root/pidor/rcswitch-pi/send 2 15A 1 "$setvalue" ) &
          ;; 
+    3dprinter) sudo /root/pidor/rcswitch-pi/send 2 7 3 "$setvalue"
+         ;;
     screen)    sudo /root/pidor/scripts/beamercontrol.sh screen "$2"
          ;;
     projector) sudo /root/pidor/scripts/beamercontrol.sh beamer "$2"
@@ -47,7 +53,7 @@ function dolight() {
          ;;
     stealth)  sudo /root/pidor/scripts/stealth.sh
          ;;
-#    maindoor)  sudo /root/pidor/scripts/opendoor.sh
+#    maindoor) sudo /root/pidor/scripts/opendoor.sh 2>&1 | logger 
 #         ;;
   esac
   #                       type (2=10bit)

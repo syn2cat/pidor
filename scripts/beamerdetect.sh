@@ -26,14 +26,12 @@ then
     exit
   fi
   signalsource="$(wget -qO - 'http://'"$projip"'/tgi/return.tgi?query=info' |awk -F'[<>]' '/<info>/{print substr($3,33,2)}')"
-  #if [ "$signalsource" = "00" ] || [ "$signalsource" = "15" ] || [ "$signalsource" = "" ]
-  if [ "$signalsource" = "00" ] ||
-     [ "$signalsource" = "02" ] ||
-     [ "$signalsource" = "" ] ||
-     [ "$signalsource" = "15" ]     # always switch off if on chromecast
-#     ( [ "$signalsource" = "15" ] && 
-#       [ "$(cat /var/run/caststatus)" = "Backdrop" ] )
-  then   # port 15 is hdmi1 (chromecast) 
+#  if [ "$signalsource" = "00" ] ||
+#     [ "$signalsource" = "02" ] ||
+#     [ "$signalsource" = "" ] ||
+#     [ "$signalsource" = "15" ]     # always switch off if on chromecast # port 15 is hdmi1 (chromecast) 
+  if true   # no more detecting if door closed by error. Nobody ever did that. Causes just issues
+  then  
     raisescreen
     lightcommander projector dvioff # swith to slideshow and off
     lightcommander projector vol-

@@ -47,6 +47,7 @@ function beameron() {
   wget -qO/dev/null http://$projip/tgi/return.tgi?command=2a3101fe0660 #projector on
   if [ "$currstatus" = "off" ]
   then
+    lowerscreen &
     echo "Waiting for beamer to boot..."
     sleep 18
     echo "... is now booted"
@@ -59,7 +60,7 @@ function dvi() {
   if [ "$currstatus" = "02" ] || [ "$currstatus" = "off" ]
   then
     echo "not switching, already displaying DVI (or off)"
-    return 1
+    return 0
   else
     echo "Switching to dvi"
     wget -qO/dev/null http://$projip/tgi/return.tgi?command=2a3109f6070566 #switch to DVI
