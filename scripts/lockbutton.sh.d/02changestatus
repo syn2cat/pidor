@@ -1,6 +1,7 @@
 #!/bin/bash
 # changes level2 state by the state of the main door
 # i.e. people have to leave it open to keep status open
+logger -t $(basename $0) "$1 starting"
 sleep 1   # silly way to debounce 
 if [ ! -f /run/spacestatus ]  # needed to init after boot
 then
@@ -9,6 +10,7 @@ fi
 if [ "$1" = "pushed" ] && 
    [ "$(cat /run/spacestatus)" = "open" ]   
 then
+  logger -t $(basename $0) "$1 set state to closed"
   FORM_action="close" /root/pidor/webserver/cgi-bin/pidor.sh
   /root/pidor/scripts/upd_status.sh 
 fi 
@@ -16,8 +18,18 @@ if [ "$1" = "released" ] &&       # if switch was released (the door opened, or 
    [ "$(cat /run/spacestatus)" = "closed" ]   # the status was closed
 #   [ $(stat -c "%Y" /run/spacestatus) -lt $(date --date "1 hour ago" +%s) ]    # since at least one hour
 then
+  logger -t $(basename $0) "$1 waiting 60s"
+  sleep 60   # wait a bit, to avoid false triggers (wind blowing, people playing with door
+  nowstate="$(gpio -g read 11)"
+  if [ "$nowstate" -eq 1 ]
+  then
+    logger -t $(basename $0) "$1 Door was closed again ($nowstate) before 60s elapsed, not setting space to open"
+    exit
+  fi
+  logger -t $(basename $0) "$1 set state to open"
   FORM_action="open" /root/pidor/webserver/cgi-bin/pidor.sh
   /root/pidor/scripts/upd_status.sh 
 #  echo "intrusion detected: space was closed since some time and locked, but now is still closed but unlocked" | wall
 #  logger -t $(basename $0) "INTRUSION ALARM. door was opened while status is closed"
 fi
+logger -t $(basename $0) "$1 done"

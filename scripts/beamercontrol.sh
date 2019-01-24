@@ -118,11 +118,11 @@ function receivercd() {
   ssh pi@doorbuzz '/usr/bin/irsend SEND_ONCE pioneer "KEY_CD"'
 }
 function receivervolumeup() {
-  echo "Turning reciever volume up"
+  #echo "Turning reciever volume up"
   ssh pi@doorbuzz '/usr/bin/irsend SEND_ONCE pioneer "KEY_VOLUMEUP"'
 }
 function receivervolumedown() {
-  echo "Turning reciever volume down"
+  #echo "Turning reciever volume down"
   ssh pi@doorbuzz '/usr/bin/irsend SEND_ONCE pioneer "KEY_VOLUMEDOWN"'
 }
 function bluray() {
@@ -187,6 +187,29 @@ case $1 in
       on) receiveron
       ;;
       off) receiveroff
+      ;;
+      shutdown)
+        echo "Receiver shutdown initiated..."
+        for i in {1..90}
+        do
+          if [ "$(cat /run/spacestatus)" = "open" ]
+          then
+            echo "space open, stopping receiver shutdown"
+            exit
+          fi
+          receivervolumedown
+        done
+        for i in {1..50}
+        do
+          if [ "$(cat /run/spacestatus)" = "open" ]
+          then
+            echo "space open, stopping receiver shutdown"
+            exit
+          fi
+          receivervolumeup
+        done
+        receiveroff
+        echo "Receiver shutdown finished."
       ;;
       hdmi) receiverhdmi
       ;;

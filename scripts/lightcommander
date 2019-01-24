@@ -8,6 +8,34 @@ then
 #  echo "usage: $0 {maindoor} {open}"
   exit 1
 fi
+
+
+LockDir="/run/lock/$(basename "$0").run"
+P() {
+  while ! mkdir "$LockDir" 2>/dev/null
+  do
+    LockDirStamp=$(stat -c %Y "$LockDir" 2>/dev/null)
+    if [ "$LockDirStamp" != "" ] && [ "$LockDirStamp" -lt $(date --date "300 seconds ago" +%s) ]
+    then
+      rmdir "$LockDir"
+      logger -t $(basename $0) "$$ deleting stale semaphore dir $LockDir"
+    fi
+    sleep 1
+  done
+}
+V() {
+  rmdir "$LockDir" 2>/dev/null
+  if [ $? -ne 0 ]
+  then
+    logger -t $(basename $0) "$$ semaphore dir $LockDir disappeared while running"
+  fi
+}
+
+function IRcmd() {
+  P
+  sudo /root/pidor/rcswitch-pi/send "$1" "$2" "$3" "$4"
+  V
+}
 #                                v---- group A=1, B=2, G=7
 #                                  v---- number
 # /root/pidor/rcswitch-pi/send 2 7 3 1 <-- 0=off 1=on
@@ -25,23 +53,23 @@ function dolight() {
          dolight "3dprinter" $2
          dolight "alarm" $2
          ;; 
-    main)      sudo /root/pidor/rcswitch-pi/send 2 1A 1 "$setvalue"
+    main)       IRcmd 2 1A 1 "$setvalue"
 		if [ "$setvalue" = "0" ]  # switch off alarm light when switching off all lights
 		then
-		  sudo /root/pidor/rcswitch-pi/send 2 15A 1 "$setvalue"
+		   IRcmd2 15A 1 "$setvalue"
 		fi
          ;; 
-    chill)     sudo /root/pidor/rcswitch-pi/send 2 1A 2 "$setvalue"
+    chill)     IRcmd 2 1A 2 "$setvalue"
          ;; 
-    status)    sudo /root/pidor/rcswitch-pi/send 2 2A 1 "$setvalue"
+    status)    IRcmd 2 2A 1 "$setvalue"
          ;; 
-    labsocket) sudo /root/pidor/rcswitch-pi/send 2 15A 6 "$setvalue"
+    labsocket) IRcmd 2 15A 6 "$setvalue"
          ;; 
-    alarm)     ( sudo /root/pidor/rcswitch-pi/send 2 15A 1 "$setvalue"
+    alarm)     ( IRcmd 2 15A 1 "$setvalue"
 		 sleep 1
-                 sudo /root/pidor/rcswitch-pi/send 2 15A 1 "$setvalue" ) &
+                 IRcmd 2 15A 1 "$setvalue" ) &
          ;; 
-    3dprinter) sudo /root/pidor/rcswitch-pi/send 2 7 3 "$setvalue"
+    3dprinter) IRcmd 2 7 3 "$setvalue"
          ;;
     screen)    sudo /root/pidor/scripts/beamercontrol.sh screen "$2"
          ;;

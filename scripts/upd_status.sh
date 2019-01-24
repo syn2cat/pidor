@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x
 sleep 5
 IGNORE_DOORLOCKBUTTON="no"
 LockDir="/run/$(basename "$0").run"
@@ -55,7 +56,10 @@ do
   if [ -x "$0".d/"$plugin" ]
   then
     "$0".d/"$plugin" "$status" "$oldstatus"
-    logger -t $(basename $0) "$$ called $plugin '$status' '$oldstatus'. ret=$?"
+    if [ "$status" != "$oldstatus" ]
+    then
+      logger -t $(basename $0) "$$ called $plugin '$status' '$oldstatus'. ret=$?"
+    fi
   fi
 done
 
@@ -109,6 +113,6 @@ then
     fi
   fi
 else
-  rm -f /run/var/netdown.txt   # reset
+  rm -f /run/netdown.txt   # reset
 fi
 V
