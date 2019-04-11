@@ -17,6 +17,10 @@ then
       # /usr/local/bin/433send 2 $j $i 0 #off
 #    done
 #  done
+
+  curl -X POST --header "Content-Type: text/plain" --header "Accept: application/json" -d "OFF" "http://10.2.113.102:8080/rest/items/engineering_table_lamps"
+  curl -X POST --header "Content-Type: text/plain" --header "Accept: application/json" -d "OFF" "http://10.2.113.102:8080/rest/items/engineering_ceiling_lamps"
+
   logger -t $(basename $0) "all lights should be off now"
 fi
 if [ "$1" = "released" ]
@@ -31,6 +35,10 @@ if [ "$1" = "released" ] # && # the door has been opened
 then
    #( [ "$(date +%H)" -gt 18 ] || [ "$(date +%H)" -lt 8 ] ) 
   logger -t $(basename $0) "switching some lights on"
+  
+  curl -X POST --header "Content-Type: text/plain" --header "Accept: application/json" -d "ON" "http://10.2.113.102:8080/rest/items/engineering_table_lamps"
+  curl -X POST --header "Content-Type: text/plain" --header "Accept: application/json" -d "ON" "http://10.2.113.102:8080/rest/items/engineering_ceiling_lamps"
+
   $(dirname "$0")/../lightcommander main on
   # /usr/local/bin/433send 2 1A 1 1 #on
 fi

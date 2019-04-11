@@ -5,10 +5,12 @@ BEAMERIP=$(cat $(dirname "$0")"/beamerip.txt")
 function raisescreen() {
   echo "Rolling projection screen up"
   ssh pi@doorbuzz 'doorbuzz/projectionscreen.sh up'
+  curl -X POST --header "Content-Type: text/plain" --header "Accept: application/json" -d "ON" "http://10.2.113.102:8080/rest/items/chill_zone_screen_button_up"
 }
 function lowerscreen() {
   echo "Rolling projection screen down"
   ssh pi@doorbuzz 'doorbuzz/projectionscreen.sh down'
+  curl -X POST --header "Content-Type: text/plain" --header "Accept: application/json" -d "ON" "http://10.2.113.102:8080/rest/items/chill_zone_screen_button_down"
 }
 function beamerquery() {
   signalsource="$(wget -qO - 'http://'"$projip"'/tgi/return.tgi?query=info' |awk -F'[<>]' '/<info>/{print substr($3,33,2)}')"

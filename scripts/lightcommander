@@ -43,8 +43,10 @@ function dolight() {
   if [ "$2" = "on" ]
   then
     setvalue=1
+    mqtt_command=ON
   else
     setvalue=0
+    mqtt_command=OFF
   fi
   case "$1" in
     all) dolight "main" $2
@@ -52,16 +54,27 @@ function dolight() {
          dolight "labsocket" $2
          dolight "3dprinter" $2
          dolight "alarm" $2
+
+         curl -X POST --header "Content-Type: text/plain" --header "Accept: application/json" -d "$mqtt_command" "http://10.2.113.102:8080/rest/items/engineering_table_lamps"
+         curl -X POST --header "Content-Type: text/plain" --header "Accept: application/json" -d "$mqtt_command" "http://10.2.113.102:8080/rest/items/engineering_ceiling_lamps"
+         curl -X POST --header "Content-Type: text/plain" --header "Accept: application/json" -d "$mqtt_command" "http://10.2.113.102:8080/rest/items/engineering_status_lamp"
+         curl -X POST --header "Content-Type: text/plain" --header "Accept: application/json" -d "$mqtt_command" "http://10.2.113.102:8080/rest/items/chill_zone_lamps"
+         curl -X POST --header "Content-Type: text/plain" --header "Accept: application/json" -d "$mqtt_command" "http://10.2.113.102:8080/rest/items/entrance_ceiling_lamps"
+
          ;; 
     main)       IRcmd 2 1A 1 "$setvalue"
+                curl -X POST --header "Content-Type: text/plain" --header "Accept: application/json" -d "$mqtt_command" "http://10.2.113.102:8080/rest/items/entrance_ceiling_lamps"
+                curl -X POST --header "Content-Type: text/plain" --header "Accept: application/json" -d "$mqtt_command" "http://10.2.113.102:8080/rest/items/chill_zone_lamps"
 		if [ "$setvalue" = "0" ]  # switch off alarm light when switching off all lights
 		then
 		   IRcmd2 15A 1 "$setvalue"
 		fi
          ;; 
     chill)     IRcmd 2 1A 2 "$setvalue"
+               curl -X POST --header "Content-Type: text/plain" --header "Accept: application/json" -d "$mqtt_command" "http://10.2.113.102:8080/rest/items/chill_zone_lamps"
          ;; 
     status)    IRcmd 2 2A 1 "$setvalue"
+               curl -X POST --header "Content-Type: text/plain" --header "Accept: application/json" -d "$mqtt_command" "http://10.2.113.102:8080/rest/items/engineering_status_lamp"
          ;; 
     labsocket) IRcmd 2 15A 6 "$setvalue"
          ;; 
@@ -94,5 +107,5 @@ function dolight() {
   #/usr/local/bin/433send 2 1A 1 0 #off
 }
 
-logger -t $(basename $0) "$$ $1 $2"
+logger -t $(basename $0) "do $$ $1 $2"
 dolight "$1" "$2"
